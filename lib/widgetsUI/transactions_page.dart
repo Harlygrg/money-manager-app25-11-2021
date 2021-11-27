@@ -18,6 +18,31 @@ class Transactions extends StatefulWidget {
 }
 
 class _TransactionsState extends State<Transactions> {
+  DateTimeRange dateRange = DateTimeRange(
+      start: DateTime(now.year,now.month,(now.day)-3),
+       end: now,
+  );
+Future  pickDateRange(BuildContext context)async{
+  final   initialDateRange = DateTimeRange(
+    start:  DateTime(now.year,now.month,(now.day)-3),
+    end: now,
+  );
+  final newDateRange = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(now.year-3),
+      lastDate: now,
+    initialDateRange: dateRange?? initialDateRange,
+  );
+  if(newDateRange==null){
+    return;
+  }
+  else{
+    setState(() {
+      dateRange =newDateRange;
+    });
+  }
+}
+
   late Box<IncomeExpenseModel> incomeExpenseBox;
   static DateTime now = DateTime.now();
   static String newdate=  DateFormat('yyyy-MM-dd').format(now);
@@ -31,20 +56,41 @@ DateTime _startDate =now;
     DateTime monthlyDatas = DateTime(now.year,(now.month)-incrementCounter,now.day);
     return monthlyDatas;
   }
-
-
+  DateTime todaysDateSelector(){
+    DateTime todaysDate = DateTime(now.year,now.month,now.day);
+    return todaysDate;
+  }
+  DateTime yesterdaysDateSelector(){
+    DateTime yesterdayDate = DateTime(now.year,now.month,(now.day)-1);
+    return yesterdayDate;
+  }
   final items = ["All","Today","Yesterday","Monthly","Select Range"];
   String dropdownValue ="All";
   DateRangePickerController _controller = DateRangePickerController();
   double incomeSum(){
-    List<int> incomeKeys = incomeExpenseBox.keys.
-    cast<int>().where((key) => incomeExpenseBox.get(key)!.isIncome==true).toList();
+    if(dropdownValue=="All"){
+      List<int> incomeKeys = incomeExpenseBox.keys.
+      cast<int>().where((key) => incomeExpenseBox.get(key)!.isIncome==true).toList();
 
-    for(int i=0;i<=incomeKeys.length-1;i++){
-      var incomeAmounts= incomeExpenseBox.get(incomeKeys[i]);
-      sumInc =sumInc + incomeAmounts!.amount!;
-      print("==============sum Income:$sumInc ");
+      for(int i=0;i<=incomeKeys.length-1;i++){
+        var incomeAmounts= incomeExpenseBox.get(incomeKeys[i]);
+        sumInc =sumInc + incomeAmounts!.amount!;
+        print("==============sum Income:$sumInc ");
 
+      }
+    }
+
+    else if(dropdownValue=="Today") {
+      List<int> incomeKeys = incomeExpenseBox.keys.
+      cast<int>()
+          .where((key) => incomeExpenseBox.get(key)!.isIncome == true)
+          .toList();
+
+      for (int i = 0; i <= incomeKeys.length - 1; i++) {
+        var incomeAmounts = incomeExpenseBox.get(incomeKeys[i]);
+        sumInc = sumInc + incomeAmounts!.amount!;
+        print("==============sum Income:$sumInc ");
+      }
     }
     return sumInc;
   }
@@ -150,48 +196,10 @@ DateTime _startDate =now;
               Padding(
                 padding: const EdgeInsets.only(top: 10,bottom: 10),
                 child: dateRangeShow(
-                    initialDate: "From: ${_startDate.day}/${_startDate.month}",
-                    finalDate: "To: ${_endDate.day}/${_endDate.month}",
+                    initialDate: DateFormat('MMMMd').format(dateRange.start),
+                    finalDate: DateFormat('MMMMd').format(dateRange.end),
                     onTap: (){
-                      showDialog(
-                          context: context, builder: (context){
-                            return AlertDialog(
-                              content: Container(
-                                width: 300,
-                                  height: 300,
-                                  child: SfDateRangePicker(
-                                    startRangeSelectionColor: Colors.red,
-                                    controller: _controller,
-                                    maxDate: DateTime.now(),
-                                    onViewChanged: (DateRangePickerViewChangedArgs args) {
-                                      var visibleDates = args.visibleDateRange;
-                                    },
-                                    //showTodayButton: true,
-                                    onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                                      if (args.value is PickerDateRange) {
-                                              setState(() {
-                                                _startDate = args.value.startDate;
-                                                _endDate = args.value.endDate;
-                                              });
-                                      }
-                                      else if(args.value==null){
-                                        _startDate =DateTime.now();
-                                        _endDate =DateTime.now();
-                                      }
-                                    },
-                                    selectionMode: DateRangePickerSelectionMode.range,
-                                    showActionButtons: true,
-                                    onSubmit: (Object value) {
-                                      Navigator.pop(context);
-                                    },
-                                    onCancel: () {
-                                      Navigator.pop(context);
-                                    },
-                                  )
-                              ),
-                            );
-                      }
-                      );
+                      pickDateRange(context);
                     }
                 ),
               ):SizedBox(height: 1,),
@@ -207,8 +215,7 @@ DateTime _startDate =now;
                       valueListenable: incomeExpenseBox.listenable(),
                       builder: (context, Box<IncomeExpenseModel> incomeExpense,_){
 
-                        DateTime todaysDate = DateTime(now.year,now.month,now.day);
-                        DateTime yesterdayDate = DateTime(now.year,now.month,(now.day)-1);
+
                         List<int> keys;
                         // keys =incomeExpense.keys.cast<int>().toList();
                         if(dropdownValue=="All"){
@@ -216,11 +223,11 @@ DateTime _startDate =now;
                         }
                         else if(dropdownValue=="Today") {
                           keys = incomeExpense.keys.cast<int>().where((key) =>
-                          incomeExpense.get(key)!.createdDate==todaysDate).toList();
+                          incomeExpense.get(key)!.createdDate==todaysDateSelector()).toList();
                         }
                         else if(dropdownValue=="Yesterday"){
                           keys = incomeExpense.keys.cast<int>().where((key) =>
-                          incomeExpense.get(key)!.createdDate==yesterdayDate).toList();
+                          incomeExpense.get(key)!.createdDate==yesterdaysDateSelector()).toList();
                         }
                         else if(dropdownValue=="Monthly"){
                           keys = incomeExpense.keys.cast<int>().where((key) =>
@@ -231,6 +238,8 @@ DateTime _startDate =now;
                         }
                         else if(dropdownValue=="Select Range"){
                           List <int> range=[];
+                          _startDate=dateRange.start;
+                          _endDate =dateRange.end;
                           int difference = _endDate.difference(_startDate).inDays;
                           for(int i =0;i<=difference; i++){
                             range.addAll(incomeExpense.keys.cast<int>().where((key) =>
@@ -340,13 +349,3 @@ DateTime _startDate =now;
     );
   }
 }
-// ListView.builder(
-//
-// scrollDirection: Axis.vertical,
-// shrinkWrap: true,
-// itemCount: 20,
-//
-// itemBuilder: (context,position){
-//
-// }
-// )
