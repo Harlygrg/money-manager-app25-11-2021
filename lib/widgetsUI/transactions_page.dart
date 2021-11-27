@@ -8,6 +8,9 @@ import 'package:intl/intl.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_manager_app/actions/data_model.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+
+
 
 class Transactions extends StatefulWidget {
   @override
@@ -18,15 +21,54 @@ class _TransactionsState extends State<Transactions> {
   late Box<IncomeExpenseModel> incomeExpenseBox;
   static DateTime now = DateTime.now();
   static String newdate=  DateFormat('yyyy-MM-dd').format(now);
-  DateTime todaysDate = DateTime.parse(newdate);
-  final items = ["All","Today","Yesterday","Monthly","Custom","Select Range"];
+  int incrementCounter=0;
+DateTime _startDate =now;
+ DateTime _endDate =now;
+  double sumInc =0;
+  double sumExp =0;
+  String selectedMonth=DateFormat('MMMM').format(now);
+  DateTime monthlyDateSelector(){
+    DateTime monthlyDatas = DateTime(now.year,(now.month)-incrementCounter,now.day);
+    return monthlyDatas;
+  }
+
+
+  final items = ["All","Today","Yesterday","Monthly","Select Range"];
   String dropdownValue ="All";
+  DateRangePickerController _controller = DateRangePickerController();
+  double incomeSum(){
+    List<int> incomeKeys = incomeExpenseBox.keys.
+    cast<int>().where((key) => incomeExpenseBox.get(key)!.isIncome==true).toList();
+
+    for(int i=0;i<=incomeKeys.length-1;i++){
+      var incomeAmounts= incomeExpenseBox.get(incomeKeys[i]);
+      sumInc =sumInc + incomeAmounts!.amount!;
+      print("==============sum Income:$sumInc ");
+
+    }
+    return sumInc;
+  }
+  double expenseSum(){
+    List<int> expenseKeys = incomeExpenseBox.keys.
+    cast<int>().where((key) => incomeExpenseBox.get(key)!.isIncome==false).toList();
+
+    for(int i=0;i<=expenseKeys.length-1;i++){
+      var incomeAmounts= incomeExpenseBox.get(expenseKeys[i]);
+      sumExp =sumExp + incomeAmounts!.amount!;
+      print("==============sum Expense :$sumExp ");
+
+    }
+    return sumExp;
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     incomeExpenseBox =Hive.box<IncomeExpenseModel>(incomeExpenseBoxName);
+    incomeSum();
+    expenseSum();
   }
+
   @override
   Widget build(BuildContext context) {
 
@@ -35,33 +77,53 @@ class _TransactionsState extends State<Transactions> {
       height: double.infinity,
       width: double.infinity,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           divider(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            
             children: [
               divider(width: 2),
-              SizedBox(
-                width: 100,
+              dropdownValue=="Monthly"?
+              Container(
+                width: 176,
+                margin: EdgeInsets.only(right: 15),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     timePeriodeChageIcon(
-                        onPressed: (){},
-                        icon: Icon(Icons.arrow_back_ios)
+                        onPressed: (){
+                          if(dropdownValue=="Monthly"){
+                            setState(() {
+                              if(incrementCounter>0){
+                                incrementCounter=incrementCounter-1;
+                                selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
+                              }
+                            });
+                          }
+                        },
+                        icon: Icon(Icons.arrow_back_ios,size: 25,)
                     ),
                     timePeriodeChageIcon(
-                        onPressed: (){},
-                        icon: Icon(Icons.arrow_forward_ios_rounded)
+                        onPressed: (){
+                          if(dropdownValue=="Monthly"){
+                            setState(() {
+                              incrementCounter=incrementCounter+1;
+                              selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
+                            });
+                          }
+                        },
+                        icon: Icon(Icons.arrow_forward_ios_rounded,size: 25,)
                         //arrow_back_ios
                     )
                   ],
                 ),
-              ),
+              ):divider(),
               DropdownButton(
+                style:  const TextStyle(color: Colors.blue),
+                focusColor:Colors.white,
                 hint: Text("Select Category"),
                 items: items.map((itemsname) {
                   return DropdownMenuItem(
@@ -79,25 +141,107 @@ class _TransactionsState extends State<Transactions> {
               divider(height: 15),
             ],
           ),
+          dropdownValue=="Monthly"?
+          Text(
+            selectedMonth,
+            style: TextStyle(fontFamily: "BalsamiqSans",fontSize: 17),):
+              divider(),
+          dropdownValue=="Select Range" ?
+              Padding(
+                padding: const EdgeInsets.only(top: 10,bottom: 10),
+                child: dateRangeShow(
+                    initialDate: "From: ${_startDate.day}/${_startDate.month}",
+                    finalDate: "To: ${_endDate.day}/${_endDate.month}",
+                    onTap: (){
+                      showDialog(
+                          context: context, builder: (context){
+                            return AlertDialog(
+                              content: Container(
+                                width: 300,
+                                  height: 300,
+                                  child: SfDateRangePicker(
+                                    startRangeSelectionColor: Colors.red,
+                                    controller: _controller,
+                                    maxDate: DateTime.now(),
+                                    onViewChanged: (DateRangePickerViewChangedArgs args) {
+                                      var visibleDates = args.visibleDateRange;
+                                    },
+                                    //showTodayButton: true,
+                                    onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                                      if (args.value is PickerDateRange) {
+                                              setState(() {
+                                                _startDate = args.value.startDate;
+                                                _endDate = args.value.endDate;
+                                              });
+                                      }
+                                      else if(args.value==null){
+                                        _startDate =DateTime.now();
+                                        _endDate =DateTime.now();
+                                      }
+                                    },
+                                    selectionMode: DateRangePickerSelectionMode.range,
+                                    showActionButtons: true,
+                                    onSubmit: (Object value) {
+                                      Navigator.pop(context);
+                                    },
+                                    onCancel: () {
+                                      Navigator.pop(context);
+                                    },
+                                  )
+                              ),
+                            );
+                      }
+                      );
+                    }
+                ),
+              ):SizedBox(height: 1,),
+          divider(height: 5),
           totalIncomeAndTotalExpenseShowingRow(
-              totalIncome: "21313",
-              totalExpense: "14234"),
-
+              totalIncome: sumInc.toString(),
+              totalExpense: sumExp.toString()),
           Container(
             margin: EdgeInsets.only(left: 10),
-            height: MediaQuery.of(context).size.height*.6,
+            height: MediaQuery.of(context).size.height*.59,
             width: MediaQuery.of(context).size.width*.95,
                     child: ValueListenableBuilder(
                       valueListenable: incomeExpenseBox.listenable(),
                       builder: (context, Box<IncomeExpenseModel> incomeExpense,_){
+
+                        DateTime todaysDate = DateTime(now.year,now.month,now.day);
+                        DateTime yesterdayDate = DateTime(now.year,now.month,(now.day)-1);
                         List<int> keys;
                         // keys =incomeExpense.keys.cast<int>().toList();
                         if(dropdownValue=="All"){
                           keys =incomeExpense.keys.cast<int>().toList();
                         }
-                        else {
-                          keys = incomeExpense.keys.cast<int>().where((key) => incomeExpense.get(key)!.createdDate==todaysDate).toList();
+                        else if(dropdownValue=="Today") {
+                          keys = incomeExpense.keys.cast<int>().where((key) =>
+                          incomeExpense.get(key)!.createdDate==todaysDate).toList();
                         }
+                        else if(dropdownValue=="Yesterday"){
+                          keys = incomeExpense.keys.cast<int>().where((key) =>
+                          incomeExpense.get(key)!.createdDate==yesterdayDate).toList();
+                        }
+                        else if(dropdownValue=="Monthly"){
+                          keys = incomeExpense.keys.cast<int>().where((key) =>
+                          incomeExpense.get(key)!.createdDate.month==monthlyDateSelector().month).toList();
+                          selectedMonth =DateFormat('MMMM').format(monthlyDateSelector());
+                          print("selectedMonth:----------$selectedMonth");
+
+                        }
+                        else if(dropdownValue=="Select Range"){
+                          List <int> range=[];
+                          int difference = _endDate.difference(_startDate).inDays;
+                          for(int i =0;i<=difference; i++){
+                            range.addAll(incomeExpense.keys.cast<int>().where((key) =>
+                            incomeExpense.get(key)!.createdDate==_startDate.add(Duration(days: i))).toList());
+                          }
+                          keys =range.toList();
+                        }
+                        else{
+                          return Text("No Transactions");
+                        }
+
                         // List<dynamic> incomeSum=[];
                         // incomeSum.add(incomeExpense.values.toList());
                         // print("incomeSum---$incomeSum");
@@ -190,41 +334,6 @@ class _TransactionsState extends State<Transactions> {
 
 
           ),
-          divider(height: 7),
-          Row(
-            children: [divider(width: 30),
-              elevatedButton(
-                  buttonName: "Time Period",
-                  buttonBackground:  Color(0xff005c99),
-                  onPressed: (){
-                    showDialog(context: context,
-                        builder: (context){
-                          return AlertDialog(
-                            actions: [
-                              Column(
-                                children: [
-                                  TextButton(
-                                    onPressed: (){},
-                                    child: Text("Monthly"),
-                                  ),
-                                  TextButton(
-                                    onPressed: (){},
-                                    child: Text("Yearly"),
-                                  ),
-                                ],
-                              )
-                            ],
-
-
-                          );
-                        }
-                    );
-                  }
-              ),
-            ],
-          ),
-          divider(height: 10)
-
         ],
       ),
 

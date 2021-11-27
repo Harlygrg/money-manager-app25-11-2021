@@ -19,8 +19,7 @@ class AddIncomeOrExpense extends StatefulWidget {
 class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
   var _formKey = GlobalKey<FormState>();
   static DateTime nowq = DateTime.now();
-  static String newdate=  DateFormat('yyyy-MM-dd').format(nowq);
-  var currentDate=newdate;
+  DateTime currentDate=DateTime(nowq.year,nowq.month,nowq.day);
   String categoryValue ="";
   String selectedCategory ="Select Category";
   final amountController = TextEditingController();
@@ -32,27 +31,17 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
   late Box<IncomeExpenseModel> incomeExpenseBox;
   late Box<CategoryModel> categoryBox;
   int _buttonGroupvalue=1;
-  int ? _selectedIndex;
   String _date = DateFormat.yMMMEd().format(nowq);
-  //final items = ["apple","banana","orange","mange"];
   String dropdownValue="apple";
   late Box<IncomeExpenseModel> incomeAndExpenseBox;
-  // _onSelected(int index) {
-  //   setState(() {
-  //     _selectedIndex = index;
-  //
-  //   });
-  // }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
     incomeAndExpenseBox = Hive.box<IncomeExpenseModel>(incomeExpenseBoxName);
     categoryBox = Hive.box<CategoryModel>(categoryBoxName);
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,7 +125,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                   maxTime: DateTime.now(),
                   onConfirm: (date){
                     print("confirm $date");
-                    currentDate ="${date.year}-${date.month}-${date.day}";
+                    currentDate =date;
                     _date = DateFormat.yMMMEd().format(date);
                     setState(() {
                     });
@@ -184,7 +173,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                       return AlertDialog(
                         actions: [
                           Container(
-                            height: MediaQuery.of(context).size.height*.80,
+                            height: MediaQuery.of(context).size.height*.50,
                             width:MediaQuery.of(context).size.width*.90,
                             padding: EdgeInsets.all(10),
                             child: ValueListenableBuilder(
@@ -348,23 +337,6 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                       ),
                     ),
                     divider(height: 15),
-
-
-                    // DropdownButton(
-                    //   items: items.map((itemsname) {
-                    //     return DropdownMenuItem(
-                    //       value: itemsname,
-                    //       child: Text(itemsname),
-                    //     );
-                    //   }).toList(),
-                    //   onChanged:(String ?newValue){
-                    //     setState(() {
-                    //       dropdownValue =newValue!;
-                    //     });
-                    //   },
-                    //   value: dropdownValue,
-                    // ),
-                    // divider(height: 15),
                     TextFormField(
                       controller: extranotesController,
                       maxLines: 2,
@@ -389,7 +361,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                 onPressed: (){
                   final double newAmount = double.parse(amountController.text);
                   final String newExtraNotes = extranotesController.text;
-                  final DateTime newDate     = DateTime.parse(currentDate);
+                  final DateTime newDate    = currentDate;
                   final isValid = _formKey.currentState!.validate();
 
                   if(isValid){
@@ -418,7 +390,11 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                         amountController.clear();
                         extranotesController.clear();
                         categoryValue = "";
-                        Navigator.pop(context);
+                        Navigator.pushNamed(context, 'HomePage').then((value) {
+                          setState(() {
+
+                          });
+                        });
                       }
                       else {
                         IncomeExpenseModel expense = IncomeExpenseModel(
@@ -435,7 +411,11 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                         amountController.clear();
                         extranotesController.clear();
                         categoryValue = "";
-                        Navigator.pop(context);
+                        Navigator.pushNamed(context, 'HomePage').then((value) {
+                          setState(() {
+
+                          });
+                        });
                       }
                     }
 

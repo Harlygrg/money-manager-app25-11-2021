@@ -190,18 +190,36 @@ Widget timePeriodeChageIcon({
   required Function() onPressed,
   required Icon icon
 }){
+  return RawMaterialButton(
+    onPressed: onPressed,
+    elevation: 2.0,
+    fillColor: Colors.blue,
+    child: icon,
+    padding: EdgeInsets.all(1.0),
+    shape: CircleBorder(),
+  );
+}
+
+
+Widget dateRangeShow({
+  required String initialDate,
+  required String finalDate,
+  required Function() onTap
+}){
   return Container(
-    width: 40,
-    height: 40,
-    padding: EdgeInsets.only(bottom: 10),
-    decoration:
-    BoxDecoration(
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(width: 2),
-    ),
-    child: IconButton(
-        onPressed: onPressed,
-        icon: icon,
+    padding: EdgeInsets.only(left: 5,right: 5),
+    child: GestureDetector(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(initialDate,style: TextStyle(fontFamily: "Roboto",fontSize: 17)),
+
+          Text(finalDate,style: TextStyle(fontFamily: "Roboto",fontSize: 17))
+        ],
+      ),
+      onTap:onTap ,
     ),
   );
 }
+// required String month,
+// Text(month,style: TextStyle(fontFamily: "BalsamiqSans",fontSize: 17),),
