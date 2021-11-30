@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 Widget popupTextField({
   required TextEditingController inputValue,
   String hintText ='',
-  bool
 }){
 
   return TextField(

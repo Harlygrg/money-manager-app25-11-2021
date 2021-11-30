@@ -223,3 +223,11 @@ Widget dateRangeShow({
 }
 // required String month,
 // Text(month,style: TextStyle(fontFamily: "BalsamiqSans",fontSize: 17),),
+
+Widget pichartTitles({
+  required String text,
+}){
+  return Text(text,style:TextStyle(
+  fontSize: 17,fontFamily: "BalsamiqSans",color: Color(0xff005c99)
+  ));
+}
