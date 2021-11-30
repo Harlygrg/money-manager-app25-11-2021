@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_manager_app/actions/data_model.dart';
 import 'package:money_manager_app/main.dart';
+import 'package:intl/intl.dart';
 
 class Piechart extends StatefulWidget {
   @override
@@ -15,48 +16,182 @@ class Piechart extends StatefulWidget {
 }
 
 class _PiechartState extends State<Piechart> {
+  static DateTime now = DateTime.now();
+  int incrementCounter =0;
+  String selectedMonth=DateFormat('MMMM').format(now);
+  DateTimeRange dateRange = DateTimeRange(
+    start: DateTime(now.year,now.month,(now.day)-3),
+    end: now,
+  );
+  Future  pickDateRange(BuildContext context)async{
+    final   initialDateRange = DateTimeRange(
+      start:  DateTime(now.year,now.month,(now.day)-3),
+      end: now,
+    );
+    final newDateRange = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(now.year-3),
+      lastDate: now,
+      initialDateRange: dateRange?? initialDateRange,
+    );
+    if(newDateRange==null){
+      return;
+    }
+    else{
+      setState(() {
+        dateRange =newDateRange;
+        incomeCategories(isIncome: true);
+        incomeCategories(isIncome: false);
+      });
+    }
+  }
+  DateTime monthlyDateSelector(){
+    DateTime monthlyDatas = DateTime(now.year,(now.month)-incrementCounter,now.day);
+    return monthlyDatas;
+  }
+  DateTime todaysDateSelector(){
+    DateTime todaysDate = DateTime(now.year,now.month,now.day);
+    return todaysDate;
+  }
+  DateTime yesterdaysDateSelector(){
+    DateTime yesterdayDate = DateTime(now.year,now.month,(now.day)-1);
+    return yesterdayDate;
+  }
   late Box<IncomeExpenseModel> incomeExpenseBox;
   late Box<CategoryModel> categoryBox;
   final items = ["All","Today","Yesterday","Monthly","Select Range"];
-  String dropdownValue ="All";
+  String dropdownValues ="All";
 
-  void incTranscat(){
-    List<double> incCatSum=[];
-    List<int> incomeKeys = incomeExpenseBox.keys.
-    cast<int>().where((key) => incomeExpenseBox.get(key)!.isIncome==true).toList();
-    for(int j=0;j<categoryItems().length;j++){
+  // List incAmoutList(){
+  //   List<double> incCatSum=[];
+  //   List<int> incomeKeys = incomeExpenseBox.keys.
+  //   cast<int>().where((key) => incomeExpenseBox.get(key)!.isIncome==true).toList();
+  //   for(int j=0;j<categoryItems().length;j++){
+  //     double sum=0;
+  //     for(int i=0;i<incomeKeys.length;i++){
+  //       var inCat = incomeExpenseBox.get(incomeKeys[i])!.category!;
+  //       var incCatAmt= incomeExpenseBox.get(incomeKeys[i])!.amount!;
+  //       if(categoryItems()[j]==inCat){
+  //         sum = sum+incCatAmt;
+  //       }
+  //     }
+  //     incCatSum.add(sum);
+  //   }
+  //   print("Incme category sum: $incCatSum");
+  //   return incCatSum;
+  // }
+
+
+  Map<String,double> incomeCategories({required bool isIncome}){
+    if(dropdownValues=="All"){
+     return pieChartDatas(
+          incomeKeys:incomeExpenseBox.keys.cast<int>()
+              .where((key)=>((incomeExpenseBox.get(key)!.isIncome == isIncome)
+              && (incomeExpenseBox.get(key)!.createdDate.year==todaysDateSelector().year))).toList(),
+              isIncome: isIncome
+      );
+   }
+    else if(dropdownValues=="Today") {
+      return pieChartDatas(
+          incomeKeys: incomeExpenseBox.keys.cast<int>()
+              .where((key)=>((incomeExpenseBox.get(key)!.isIncome == isIncome)
+                      &&
+              (incomeExpenseBox.get(key)!.createdDate==todaysDateSelector())) ).toList(),
+          isIncome: isIncome);
+    }
+    else if(dropdownValues=="Yesterday") {
+      return pieChartDatas(
+          incomeKeys: incomeExpenseBox.keys.cast<int>()
+              .where((key)=>((incomeExpenseBox.get(key)!.isIncome == isIncome)
+              &&
+              (incomeExpenseBox.get(key)!.createdDate==yesterdaysDateSelector())) ).toList(),
+          isIncome: isIncome
+      );
+    }
+    else if(dropdownValues=="Monthly") {
+      return pieChartDatas(
+          incomeKeys: incomeExpenseBox.keys.cast<int>()
+              .where(
+                  (key)=> ((incomeExpenseBox.get(key)!.isIncome == isIncome)
+                      &&
+                      (incomeExpenseBox.get(key)!.createdDate.month==monthlyDateSelector().month)) ).toList(),
+          isIncome: isIncome);
+    }
+    else{
+      //List<int> incomeKeysRange;
+      List <int> range=[];
+      int difference = dateRange.end.difference(dateRange.start).inDays;
+      for(int i =0;i<=difference; i++){
+        range.addAll(incomeExpenseBox.keys.cast<int>().where((key) {
+          return (incomeExpenseBox.get(key)!.createdDate==dateRange.start.add(Duration(days: i)))&&
+              (incomeExpenseBox.get(key)!.isIncome == isIncome);
+        }
+        ).toList());
+      }
+      return pieChartDatas(
+          incomeKeys: range,
+          isIncome: isIncome);
+    }
+
+  }
+  //------------------------------------------------------------------------------------------------------------------
+  Map<String,double> pieChartDatas({required List<int> incomeKeys,required bool isIncome}){
+    Map<String, double> datasForPieChart = {};
+    List<String> incCatList=[];
+    List<int> incomeKeysForCatType = categoryBox.keys.
+    cast<int>().where((key) => categoryBox.get(key)!.isIncome==isIncome).toList();
+    for(int i=0;i<incomeKeysForCatType.length;i++){
+      var incCat = categoryBox.get(incomeKeysForCatType[i])!.category!;
+      incCatList.add(incCat.toString());
+    }
+    print("income categories : $incCatList");
+
+    for(int j=0;j<incCatList.length;j++){
       double sum=0;
       for(int i=0;i<incomeKeys.length;i++){
         var inCat = incomeExpenseBox.get(incomeKeys[i])!.category!;
         var incCatAmt= incomeExpenseBox.get(incomeKeys[i])!.amount!;
-        if(categoryItems()[j]==inCat){
+        if(incCatList[j]==inCat){
           sum = sum+incCatAmt;
+
         }
       }
-      incCatSum.add(sum);
+      datasForPieChart[incCatList[j]]=sum;
     }
-    print("Incme category sum: $incCatSum");
+    print("Incme category sum: $datasForPieChart");
+
+
+    return datasForPieChart;
+
   }
 
-List categoryItems(){
-  List<String> incCatList=[];
-  List<int> incomeKeys = categoryBox.keys.
-  cast<int>().where((key) => categoryBox.get(key)!.isIncome==true).toList();
-  for(int i=0;i<incomeKeys.length;i++){
-    var incCat = categoryBox.get(incomeKeys[i])!.category!;
-    incCatList.add(incCat.toString());
-  }
-  print("income categories : $incCatList");
-  return incCatList;
-}
 
+  //------------------------------------------------------------------------------------------------------------------
 
-  Map<String, double> datasForPieChart = {
-    "Category1": 5,
-    "Category2": 3,
-    "Category3": 7,
-    "Category4": 2,
-  };
+// List categoryItems(){
+//   List<String> incCatList=[];
+//   List<int> incomeKeys = categoryBox.keys.
+//   cast<int>().where((key) => categoryBox.get(key)!.isIncome==true).toList();
+//   for(int i=0;i<incomeKeys.length;i++){
+//     var incCat = categoryBox.get(incomeKeys[i])!.category!;
+//     incCatList.add(incCat.toString());
+//   }
+//   print("income categories : $incCatList");
+//   return incCatList;
+// }
+
+  // Map<String, double> pichartDatas(List<double> amounts){
+  //   Map<String, double> datasForPieChart = {};
+  //   String key;
+  //   double value;
+  //   for(int i=0;i< categoryItems().length;i++){
+  //     key = categoryItems()[i];
+  //     value = amounts[i];
+  //     datasForPieChart[key]=value;
+  //   }
+  //     return datasForPieChart;
+  // }
+
 
   List<Color> colorList=[Colors.green,Colors.red,Colors.yellow,Colors.orangeAccent];
   @override
@@ -65,8 +200,8 @@ List categoryItems(){
     super.initState();
     categoryBox = Hive.box<CategoryModel>(categoryBoxName);
     incomeExpenseBox =Hive.box<IncomeExpenseModel>(incomeExpenseBoxName);
-    categoryItems();
-    incTranscat();
+    incomeCategories(isIncome: true);
+    incomeCategories(isIncome: false);
   }
   @override
   Widget build(BuildContext context) {
@@ -75,70 +210,128 @@ List categoryItems(){
         title: Text("Money Manager"),
         backgroundColor: Color(0xff005c99),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: pichartTitles(text: "INCOME"),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 5),
-                height: 40,
-                padding: const EdgeInsets.only(left: 10,right: 3),
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Color(0xff005c99),
-                        width: 2,
-                        style: BorderStyle.solid
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(3))
+      body: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: pichartTitles(text: "INCOME"),
                 ),
-                child: DropdownButton(
-                  underline: Text(""),
-                  style:  const TextStyle(
-                    color: Colors.blue,
-                    fontFamily: "BalsamiqSans",
-                    fontSize: 17,
+                Container(
+                  margin: const EdgeInsets.only(top: 5),
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 10,right: 3),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Color(0xff005c99),
+                          width: 2,
+                          style: BorderStyle.solid
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(3))
                   ),
-                  focusColor:Colors.white,
-                  hint: Text("Select Category"),
-                  items: items.map((itemsname) {
-                    return DropdownMenuItem(
-                      value: itemsname,
-                      child: Text(itemsname),
-                    );
-                  }).toList(),
-                  onChanged:(String ?newValue){
-                    setState(() {
-                      dropdownValue =newValue!;
-                    });
-                  },
-                  value: dropdownValue,
+                  child: DropdownButton(
+                    underline: Text(""),
+                    style:  const TextStyle(
+                      color: Colors.blue,
+                      fontFamily: "BalsamiqSans",
+                      fontSize: 17,
+                    ),
+                    focusColor:Colors.white,
+                    hint: Text("Select Category"),
+                    items: items.map((itemsname) {
+                      return DropdownMenuItem(
+                        value: itemsname,
+                        child: Text(itemsname),
+                      );
+                    }).toList(),
+                    onChanged:(String ?newValue){
+                      setState(() {
+                        dropdownValues =newValue!;
+                        incomeCategories(isIncome: true);
+                        incomeCategories(isIncome: false);
+                      });
+                    },
+                    value: dropdownValues,
+                  ),
                 ),
-              ),
 
-            ],
-          ),
-          divider(height: 40),
-          piechart(
-              piechartDatas: datasForPieChart,
-              colorList: colorList
-          ),
-          divider(height: 40),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: pichartTitles(text: "EXPENSE"),
-          ),
-          divider(height: 40),
-          piechart(
-            piechartDatas: datasForPieChart,
-            colorList: colorList,
-          ),
-        ],
+              ],
+            ),
+            dropdownValues=="Monthly"?
+            Container(
+              //width: 176,
+              margin: EdgeInsets.only(right: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  timePeriodeChageIcon(
+                      onPressed: (){
+                        if(dropdownValues=="Monthly"){
+                          setState(() {
+                            if(incrementCounter>0){
+                              incrementCounter=incrementCounter-1;
+                              selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
+                              incomeCategories(isIncome: true);
+                              incomeCategories(isIncome: false);
+                            }
+                          });
+                        }
+                      },
+                      icon: const Icon(Icons.arrow_back_ios,size: 25,)
+                  ),
+                  timePeriodeChageIcon(
+                      onPressed: (){
+                        if(dropdownValues=="Monthly"){
+                          setState(() {
+                            incrementCounter=incrementCounter+1;
+                            selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
+                            incomeCategories(isIncome: true);
+                            incomeCategories(isIncome: false);
+                          });
+                        }
+                      },
+                      icon: const Icon(Icons.arrow_forward_ios_rounded,size: 25,)
+                    //arrow_back_ios
+                  ),divider(width: 100),
+                  Text(
+                    selectedMonth,
+                    style: TextStyle(fontFamily: "BalsamiqSans",fontSize: 17),),
+                ],
+              ),
+            ): divider(height: 1),
+            dropdownValues=="Select Range" ?
+            Padding(
+              padding: const EdgeInsets.only(top: 10,bottom: 10),
+              child: dateRangeShow(
+                  initialDate: DateFormat('MMMMd').format(dateRange.start),
+                  finalDate: DateFormat('MMMMd').format(dateRange.end),
+                  onTap: (){
+                    pickDateRange(context);
+                  }
+              ),
+            ):SizedBox(height: 1,),
+            divider(height: 35),
+            piechart(
+                piechartDatas: incomeCategories(isIncome: true),
+                colorList: colorList
+            ),
+            divider(height: 35),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: pichartTitles(text: "EXPENSE"),
+            ),
+            divider(height: 37),
+            piechart(
+              piechartDatas: incomeCategories(isIncome: false),
+              colorList: colorList,
+            ),
+          ],
+        ),
       ),
     );
   }

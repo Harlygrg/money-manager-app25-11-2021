@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:money_manager_app/main.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
+import 'package:money_manager_app/actions/refactored_functions.dart';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -49,7 +50,7 @@ Future  pickDateRange(BuildContext context)async{
   }
 }
   late Box<IncomeExpenseModel> incomeExpenseBox;
-  static DateTime now = DateTime.now();
+
   int incrementCounter=0;
 DateTime _startDate =now;
  DateTime _endDate =now;
