@@ -122,7 +122,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                     containerHeight: 210,
                   ),showTitleActions: true,
                   minTime: DateTime(2010,12,31),
-                  maxTime: DateTime.now(),
+                  maxTime: currentDate,
                   onConfirm: (date){
                     print("confirm $date");
                     currentDate =date;

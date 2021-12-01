@@ -32,7 +32,7 @@ class _PiechartState extends State<Piechart> {
       context: context,
       firstDate: DateTime(now.year-3),
       lastDate: now,
-      initialDateRange: dateRange?? initialDateRange,
+      initialDateRange: dateRange,
     );
     if(newDateRange==null){
       return;
@@ -58,29 +58,8 @@ class _PiechartState extends State<Piechart> {
     return yesterdayDate;
   }
   late Box<IncomeExpenseModel> incomeExpenseBox;
-  late Box<CategoryModel> categoryBox;
   final items = ["All","Today","Yesterday","Monthly","Select Range"];
   String dropdownValues ="All";
-
-  // List incAmoutList(){
-  //   List<double> incCatSum=[];
-  //   List<int> incomeKeys = incomeExpenseBox.keys.
-  //   cast<int>().where((key) => incomeExpenseBox.get(key)!.isIncome==true).toList();
-  //   for(int j=0;j<categoryItems().length;j++){
-  //     double sum=0;
-  //     for(int i=0;i<incomeKeys.length;i++){
-  //       var inCat = incomeExpenseBox.get(incomeKeys[i])!.category!;
-  //       var incCatAmt= incomeExpenseBox.get(incomeKeys[i])!.amount!;
-  //       if(categoryItems()[j]==inCat){
-  //         sum = sum+incCatAmt;
-  //       }
-  //     }
-  //     incCatSum.add(sum);
-  //   }
-  //   print("Incme category sum: $incCatSum");
-  //   return incCatSum;
-  // }
-
 
   Map<String,double> incomeCategories({required bool isIncome}){
     if(dropdownValues=="All"){
@@ -113,8 +92,8 @@ class _PiechartState extends State<Piechart> {
           incomeKeys: incomeExpenseBox.keys.cast<int>()
               .where(
                   (key)=> ((incomeExpenseBox.get(key)!.isIncome == isIncome)
-                      &&
-                      (incomeExpenseBox.get(key)!.createdDate.month==monthlyDateSelector().month)) ).toList(),
+                      && (incomeExpenseBox.get(key)!.createdDate.month==monthlyDateSelector().month)
+                      &&(incomeExpenseBox.get(key)!.createdDate.year==monthlyDateSelector().year)) ).toList(),
           isIncome: isIncome);
     }
     else{
@@ -138,18 +117,20 @@ class _PiechartState extends State<Piechart> {
   Map<String,double> pieChartDatas({required List<int> incomeKeys,required bool isIncome}){
     Map<String, double> datasForPieChart = {};
     List<String> incCatList=[];
-    List<int> incomeKeysForCatType = categoryBox.keys.
-    cast<int>().where((key) => categoryBox.get(key)!.isIncome==isIncome).toList();
+    List<int> incomeKeysForCatType = incomeExpenseBox.keys.
+    cast<int>().where((key) => incomeExpenseBox.get(key)!.isIncome==isIncome).toList();
     for(int i=0;i<incomeKeysForCatType.length;i++){
-      var incCat = categoryBox.get(incomeKeysForCatType[i])!.category!;
+      var incCat = incomeExpenseBox.get(incomeKeysForCatType[i])!.category;
       incCatList.add(incCat.toString());
     }
+    var incCatListDuplicateCatRemove=incCatList.toSet().toList();
+    incCatList=incCatListDuplicateCatRemove.toList();
     print("income categories : $incCatList");
 
     for(int j=0;j<incCatList.length;j++){
       double sum=0;
       for(int i=0;i<incomeKeys.length;i++){
-        var inCat = incomeExpenseBox.get(incomeKeys[i])!.category!;
+        var inCat = incomeExpenseBox.get(incomeKeys[i])!.category;
         var incCatAmt= incomeExpenseBox.get(incomeKeys[i])!.amount!;
         if(incCatList[j]==inCat){
           sum = sum+incCatAmt;
@@ -165,40 +146,11 @@ class _PiechartState extends State<Piechart> {
 
   }
 
-
-  //------------------------------------------------------------------------------------------------------------------
-
-// List categoryItems(){
-//   List<String> incCatList=[];
-//   List<int> incomeKeys = categoryBox.keys.
-//   cast<int>().where((key) => categoryBox.get(key)!.isIncome==true).toList();
-//   for(int i=0;i<incomeKeys.length;i++){
-//     var incCat = categoryBox.get(incomeKeys[i])!.category!;
-//     incCatList.add(incCat.toString());
-//   }
-//   print("income categories : $incCatList");
-//   return incCatList;
-// }
-
-  // Map<String, double> pichartDatas(List<double> amounts){
-  //   Map<String, double> datasForPieChart = {};
-  //   String key;
-  //   double value;
-  //   for(int i=0;i< categoryItems().length;i++){
-  //     key = categoryItems()[i];
-  //     value = amounts[i];
-  //     datasForPieChart[key]=value;
-  //   }
-  //     return datasForPieChart;
-  // }
-
-
   List<Color> colorList=[Colors.green,Colors.red,Colors.yellow,Colors.orangeAccent];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    categoryBox = Hive.box<CategoryModel>(categoryBoxName);
     incomeExpenseBox =Hive.box<IncomeExpenseModel>(incomeExpenseBoxName);
     incomeCategories(isIncome: true);
     incomeCategories(isIncome: false);

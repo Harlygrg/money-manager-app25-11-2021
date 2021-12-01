@@ -36,7 +36,7 @@ Future  pickDateRange(BuildContext context)async{
       context: context,
       firstDate: DateTime(now.year-3),
       lastDate: now,
-    initialDateRange: dateRange?? initialDateRange,
+    initialDateRange: dateRange,
   );
   if(newDateRange==null){
     return;
@@ -294,12 +294,12 @@ DateTime _startDate =now;
                         onPressed: (){
                           if(dropdownValue=="Monthly"){
                             setState(() {
-                              if(incrementCounter>0){
-                                incrementCounter=incrementCounter-1;
+
+                                incrementCounter=incrementCounter+1;
                                 selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
                                 incomeSum();
                                 expenseSum();
-                              }
+
                             });
                           }
                         },
@@ -309,10 +309,13 @@ DateTime _startDate =now;
                         onPressed: (){
                           if(dropdownValue=="Monthly"){
                             setState(() {
-                              incrementCounter=incrementCounter+1;
-                              selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
-                              incomeSum();
-                              expenseSum();
+                              if(incrementCounter>0) {
+                                incrementCounter = incrementCounter - 1;
+                                selectedMonth = DateFormat('MMMM').format(
+                                    monthlyDateSelector());
+                                incomeSum();
+                                expenseSum();
+                              }
                             });
                           }
                         },
@@ -392,23 +395,68 @@ DateTime _startDate =now;
 
 
                         List<int> keys;
-                        // keys =incomeExpense.keys.cast<int>().toList();
                         if(dropdownValue=="All"){
-                          keys =incomeExpense.keys.cast<int>().toList();
+                          List<int> keysUnsorted;
+                          keysUnsorted =incomeExpense.keys.cast<int>().where((key) =>
+                          incomeExpense.get(key)!.createdDate.year==todaysDateSelector().year).toList();
+                          List<DateTime> datesList=[];
+                          for(int i=0;i<keysUnsorted.length;i++){
+                            DateTime date = incomeExpense.get(keysUnsorted[i])!.createdDate;
+                            datesList.add(date);
+                          }
+                          datesList.sort();
+                          List<DateTime> reversedDateList = List.from(datesList.reversed);
+                          var duplicatesRemovedFromReversedDateList= reversedDateList.toSet().toList();
+                          reversedDateList =duplicatesRemovedFromReversedDateList.toList();
+                          List<int> sortedKeys=[];
+                          var keyInorder;
+                          for(int j=0;j<reversedDateList.length;j++){
+
+                            keyInorder = incomeExpense.keys.cast<int>().where((key) =>
+                            incomeExpense.get(key)!.createdDate==reversedDateList[j]);
+                            sortedKeys.addAll(keyInorder);
+                            print("------keyIn order $keyInorder");
+
+                          }
+                          keys= sortedKeys.toList();
+                          print("----------$keys");
                         }
                         else if(dropdownValue=="Today") {
                           keys = incomeExpense.keys.cast<int>().where((key) =>
                           incomeExpense.get(key)!.createdDate==todaysDateSelector()).toList();
+                          var reversedKeys=keys.reversed;
+                          keys = reversedKeys.toList();
                         }
                         else if(dropdownValue=="Yesterday"){
                           keys = incomeExpense.keys.cast<int>().where((key) =>
                           incomeExpense.get(key)!.createdDate==yesterdaysDateSelector()).toList();
+                          var reversedKeys=keys.reversed;
+                          keys = reversedKeys.toList();
                         }
                         else if(dropdownValue=="Monthly"){
-                          keys = incomeExpense.keys.cast<int>().where((key) =>
-                          incomeExpense.get(key)!.createdDate.month==monthlyDateSelector().month).toList();
+                          List<int> unsortedKeysForOneMonth;
+                          unsortedKeysForOneMonth = incomeExpense.keys.cast<int>().where((key) =>
+                          (incomeExpense.get(key)!.createdDate.month==monthlyDateSelector().month)&&
+                              (incomeExpense.get(key)!.createdDate.year==monthlyDateSelector().year)).toList();
                           selectedMonth =DateFormat('MMMM').format(monthlyDateSelector());
-                          print("selectedMonth:----------$selectedMonth");
+                          List<DateTime> monthlyDatesList=[];
+                          for(int i=0;i<unsortedKeysForOneMonth.length;i++){
+                            DateTime date = incomeExpense.get(unsortedKeysForOneMonth[i])!.createdDate;
+                            monthlyDatesList.add(date);
+                          }
+                          monthlyDatesList.sort();
+                          var duplicateDatesRemoved = monthlyDatesList.reversed.toSet().toList();
+                          monthlyDatesList = duplicateDatesRemoved.toList();
+                          Iterable<int> monthelyKeysInorder;
+                          List<int> sortedMothlyKeys=[];
+                          for(int j=0;j<monthlyDatesList.length;j++){
+                            monthelyKeysInorder = incomeExpense.keys.cast<int>().where((key) =>
+                            incomeExpense.get(key)!.createdDate==monthlyDatesList[j]);
+                            sortedMothlyKeys.addAll(monthelyKeysInorder);
+
+                          }
+                          keys =sortedMothlyKeys.toList();
+                          //print("selectedMonth:----------$selectedMonth");
 
                         }
                         else if(dropdownValue=="Select Range"){
@@ -425,27 +473,6 @@ DateTime _startDate =now;
                         else{
                           return Text("No Transactions");
                         }
-
-                        // List<dynamic> incomeSum=[];
-                        // incomeSum.add(incomeExpense.values.toList());
-                        // print("incomeSum---$incomeSum");
-                        // incomeSum = incomeExpense.keys.cast<int>().where((key) => incomeExpense.get(key)!.isIncome).toList();
-
-                        //List<IncomeExpenseModel> dateOrder;
-                        //dateOrder.sort((a,b){a.});
-                        //keys = incomeExpense.keys.cast<int>().where((key) => incomeExpense.get(key)!.isIncome).toList();
-
-                        //keys.sort();
-                       // keys.reversed;
-                       //  if(incomeCategoryButtonSelected==true){
-                       //    keys = categories.keys.cast<int>().where((key) => categories.get(key)!.isIncome).toList();
-                       //  }
-                       //  else{
-                       //    keys = categories.keys.cast<int>().where((key) => !categories.get(key)!.isIncome).toList();
-                       //  }
-                       //  keys =categories.keys.cast<int>().toList();
-                        //List<int> days;
-                        //days =incomeExpense.keys.cast<int>().where((element) => false);
 
                         return ListView.separated(
                           scrollDirection: Axis.vertical,
