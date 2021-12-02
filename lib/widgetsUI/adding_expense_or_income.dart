@@ -386,11 +386,13 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                         amountController.clear();
                         extranotesController.clear();
                         categoryValue = "";
-                        Navigator.pushNamed(context, 'HomePage').then((value) {
+                        Navigator.
+                        pushNamed(context, 'HomePage').then((value) {
                           setState(() {
 
                           });
-                        });
+                        }
+                        );
                       }
                       else {
                         IncomeExpenseModel expense = IncomeExpenseModel(
@@ -407,7 +409,8 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                         amountController.clear();
                         extranotesController.clear();
                         categoryValue = "";
-                        Navigator.pushNamed(context, 'HomePage').then((value) {
+                        Navigator.
+                        pushNamed(context, 'HomePage').then((value) {
                           setState(() {
 
                           });

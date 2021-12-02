@@ -6,17 +6,15 @@ import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_manager_app/main.dart';
+import 'package:intl/intl.dart';
 class Overview extends StatefulWidget {
   @override
   _OverviewState createState() => _OverviewState();
 }
 
 class _OverviewState extends State<Overview> {
-
+String monthYear = DateFormat.yMMMM().format((DateTime.now()));
 late Box<IncomeExpenseModel> incomeExpenseBox;
-double ?incTotal;
-double ?expTotal;
-double balance=0;
 
 List<double> incAmounts=[];
 List<double> expAmounts=[];
@@ -24,9 +22,53 @@ List<String> incCategories=[];
 List<String> expCategories=[];
 List<double> allAmounts=[];
 List<String> allCategories=[];
+//List<double>totalAmountsList=[];
+
+  Map<String,double> incExpCatWiseDatas({required bool isIncome}){
+
+    List<int> incomeKeys =incomeExpenseBox.keys.cast<int>().where(
+            (key)=> ((incomeExpenseBox.get(key)!.isIncome == isIncome)
+            && (incomeExpenseBox.get(key)!.createdDate.month==DateTime.now().month)
+            &&(incomeExpenseBox.get(key)!.createdDate.year==DateTime.now().year)) ).toList();
+    Map<String, double> datasForPieChart = {};
+    List<String> incCatList=[];
+    for(int i=0;i<incomeKeys.length;i++){
+      var incCat = incomeExpenseBox.get(incomeKeys[i])!.category;
+      incCatList.add(incCat.toString());
+    }
+    var incCatListDuplicateCatRemove=incCatList.toSet().toList();
+    incCatList=incCatListDuplicateCatRemove.toList();
+
+    for(int j=0;j<incCatList.length;j++){
+      double sum=0;
+      for(int i=0;i<incomeKeys.length;i++){
+        var inCat = incomeExpenseBox.get(incomeKeys[i])!.category;
+        var incCatAmt= incomeExpenseBox.get(incomeKeys[i])!.amount!;
+        if(incCatList[j]==inCat){
+          sum = sum+incCatAmt;
+
+        }
+      }
+      datasForPieChart[incCatList[j]]=sum;
+    }
+    return datasForPieChart;
+  }
+
+  double totalAmouns({required bool isIncome,}){
+    List<double> totals = [];
+    double total = 0;
+      totals =incExpCatWiseDatas(isIncome:isIncome).values.toList();
+      for (int i = 0; i < totals.length; i++) {
+          total = total + totals[i];
+        }
+      return total;
+    }
 
 
-@override
+
+
+
+  @override
 void initState() {
   // TODO: implement initState
   super.initState();
@@ -84,11 +126,11 @@ void initState() {
         children: [
 
           divider(height: 10),
-          incomeExpenseBalanceText(text: "December 2021",fontSize: 20,color: Colors.black,fontFamily: "PermanentMarker",fontWeight: FontWeight.normal),
-          totalIncomeAndExpenseBalanceTile(titleText: "Total Income", amount: incTotal.toString(), trailingTextColor: Colors.green),
-          totalIncomeAndExpenseBalanceTile(titleText: "Total Expense", amount: expTotal.toString(), trailingTextColor: Colors.red),
+          incomeExpenseBalanceText(text: monthYear,fontSize: 20,color: Colors.black,fontFamily: "PermanentMarker",fontWeight: FontWeight.normal),
+          totalIncomeAndExpenseBalanceTile(titleText: "Total Income", amount: "${totalAmouns(isIncome: true)}", trailingTextColor: Colors.green),
+          totalIncomeAndExpenseBalanceTile(titleText: "Total Expense", amount: "${totalAmouns(isIncome: false)}", trailingTextColor: Colors.red),
           Divider(color: Color(0xff005c99),),
-          totalIncomeAndExpenseBalanceTile(titleText: "Balance", amount: balance.toString(), trailingTextColor: Colors.green),
+          totalIncomeAndExpenseBalanceTile(titleText: "Balance", amount: "${totalAmouns(isIncome: true)-totalAmouns(isIncome: false)}", trailingTextColor: Colors.green),
 
           divider(height: 10),
           Container(
@@ -99,63 +141,21 @@ void initState() {
 
                 valueListenable: incomeExpenseBox.listenable(),
                 builder: (context, Box<IncomeExpenseModel> incomeExpense,_){
-
-                  Map<String,double> incExpCatWiseDatas({required bool isIncome}){
-                        List<int> incomeKeys =incomeExpense.keys.cast<int>().where(
-                                (key)=> ((incomeExpense.get(key)!.isIncome == isIncome)
-                                && (incomeExpense.get(key)!.createdDate.month==DateTime.now().month)
-                                &&(incomeExpense.get(key)!.createdDate.year==DateTime.now().year)) ).toList();
-                    Map<String, double> datasForPieChart = {};
-                    List<String> incCatList=[];
-                    for(int i=0;i<incomeKeys.length;i++){
-                      var incCat = incomeExpense.get(incomeKeys[i])!.category;
-                      incCatList.add(incCat.toString());
-                    }
-                    var incCatListDuplicateCatRemove=incCatList.toSet().toList();
-                    incCatList=incCatListDuplicateCatRemove.toList();
-
-                    for(int j=0;j<incCatList.length;j++){
-                      double sum=0;
-                      for(int i=0;i<incomeKeys.length;i++){
-                        var inCat = incomeExpense.get(incomeKeys[i])!.category;
-                        var incCatAmt= incomeExpense.get(incomeKeys[i])!.amount!;
-                        if(incCatList[j]==inCat){
-                          sum = sum+incCatAmt;
-
-                        }
-                      }
-                      datasForPieChart[incCatList[j]]=sum;
-                    }
-                    return datasForPieChart;
-                  }
-
-                  incCategories=incExpCatWiseDatas(isIncome: true).keys.toList();
-                  incAmounts=incExpCatWiseDatas(isIncome: true).values.toList();
-                  expCategories=incExpCatWiseDatas(isIncome: false).keys.toList();
-                  expAmounts=incExpCatWiseDatas(isIncome: false).values.toList();
-                  allAmounts.addAll(incAmounts);
-                  allAmounts.addAll(expAmounts);
-                  allCategories.addAll(incCategories);
-                  allCategories.addAll(expCategories);
-                    incTotal=0;
-                    expTotal=0;
-                  for(int i=0;i<allAmounts.length;i++){
-                    if(i<incAmounts.length){
-                      incTotal=incTotal! + allAmounts[i];
-
-                    }
-                    else{
-                      expTotal = expTotal! + allAmounts[i];
-                    }
-                  }
-
-
-                  balance=incTotal!-expTotal!;
-                  print("incomeCategory:$incCategories,"
-                      " incomeAmounts: $incAmounts, expenseCat: $expCategories, expAmount: $expAmounts,"
-                      "allAmounts: $allAmounts, allCat: $allCategories");
-//-----------------------------------------------------------------------------------------------------------------------
-                  return ListView.separated(
+                  if(allCategories.isEmpty){
+                    incCategories =
+                        incExpCatWiseDatas(isIncome: true).keys.toList();
+                    incAmounts =
+                        incExpCatWiseDatas(isIncome: true).values.toList();
+                    expCategories =
+                        incExpCatWiseDatas(isIncome: false).keys.toList();
+                    expAmounts =
+                        incExpCatWiseDatas(isIncome: false).values.toList();
+                    allAmounts.addAll(incAmounts);
+                    allAmounts.addAll(expAmounts);
+                    allCategories.addAll(incCategories);
+                    allCategories.addAll(expCategories);
+                  };
+                    return ListView.separated(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     itemCount: allCategories.length,
@@ -173,7 +173,7 @@ void initState() {
                       );
                     }, separatorBuilder: (BuildContext context, int index) {
                     return Divider(color: Color(0xff66b3ff),
-                      thickness: 2.5,);
+                      thickness: 1,);
                   },
                   );
                 }

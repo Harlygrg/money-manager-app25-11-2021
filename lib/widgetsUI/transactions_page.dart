@@ -385,7 +385,8 @@ DateTime _startDate =now;
           totalIncomeAndTotalExpenseShowingRow(
               totalIncome: sumInc.toString(),
               totalExpense: sumExp.toString()),
-          Container(
+
+         incomeExpenseBox.isNotEmpty ? Container(
             margin: EdgeInsets.only(left: 10),
             height: MediaQuery.of(context).size.height*.59,
             width: MediaQuery.of(context).size.width*.95,
@@ -409,13 +410,13 @@ DateTime _startDate =now;
                           var duplicatesRemovedFromReversedDateList= reversedDateList.toSet().toList();
                           reversedDateList =duplicatesRemovedFromReversedDateList.toList();
                           List<int> sortedKeys=[];
-                          var keyInorder;
+                          List<int> keyInorder;
                           for(int j=0;j<reversedDateList.length;j++){
-
                             keyInorder = incomeExpense.keys.cast<int>().where((key) =>
-                            incomeExpense.get(key)!.createdDate==reversedDateList[j]);
-                            sortedKeys.addAll(keyInorder);
-                            print("------keyIn order $keyInorder");
+                            incomeExpense.get(key)!.createdDate==reversedDateList[j]).toList();
+                            List<int> reversedList = List.from(keyInorder.reversed);
+                            sortedKeys.addAll(reversedList);
+                            print("------keyIn order $reversedList");
 
                           }
                           keys= sortedKeys.toList();
@@ -498,20 +499,19 @@ DateTime _startDate =now;
                                     builder: (context){
                                       return AlertDialog(
                                         actions: [
-                                          Column(
-                                            children: [
-                                              ElevatedButton(
-                                                onPressed: (){
-                                                  incomeExpenseBox.delete(key);
-                                                  setState(() {
-                                                    incomeSum();
-                                                    expenseSum();
-                                                  });
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text("Delete"),
-                                              )
-                                            ],
+                                          ListTile(
+                                            tileColor:Colors.blue,
+                                            title: Text("Delete",
+                                              style: TextStyle(color: Colors.white),),
+
+                                            onTap:  (){
+                                              incomeExpenseBox.delete(key);
+                                              setState(() {
+                                                incomeSum();
+                                                expenseSum();
+                                              });
+                                              Navigator.pop(context);
+                                            },
                                           )
                                         ],
                                       );
@@ -548,7 +548,7 @@ DateTime _startDate =now;
                     // },
 
 
-          ),
+          ):Center(child: Text("No Transactions")),
         ],
       ),
 

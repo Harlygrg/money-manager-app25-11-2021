@@ -268,20 +268,22 @@ class _PiechartState extends State<Piechart> {
               ),
             ):SizedBox(height: 1,),
             divider(height: 35),
+          incomeCategories(isIncome: true).isNotEmpty ?
             piechart(
                 piechartDatas: incomeCategories(isIncome: true),
                 colorList: colorList
-            ),
+            ):Center(child: Text("No transactions yet")),
             divider(height: 35),
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: pichartTitles(text: "EXPENSE"),
             ),
             divider(height: 37),
-            piechart(
+           incomeCategories(isIncome: false).isNotEmpty ?
+                       piechart(
               piechartDatas: incomeCategories(isIncome: false),
               colorList: colorList,
-            ),
+            ):Center(child: Text("No transactions yet")),
           ],
         ),
       ),
