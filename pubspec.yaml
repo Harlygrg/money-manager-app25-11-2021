@@ -36,6 +36,8 @@ dependencies:
   flutter_datetime_picker:
   pie_chart:
   syncfusion_flutter_datepicker:
+  flutter_local_notifications:
+  provider:
 
 
   # The following adds the Cupertino Icons font to your application.

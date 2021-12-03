@@ -57,6 +57,7 @@ class _PiechartState extends State<Piechart> {
     DateTime yesterdayDate = DateTime(now.year,now.month,(now.day)-1);
     return yesterdayDate;
   }
+
   late Box<IncomeExpenseModel> incomeExpenseBox;
   final items = ["All","Today","Yesterday","Monthly","Select Range"];
   String dropdownValues ="All";
@@ -66,7 +67,8 @@ class _PiechartState extends State<Piechart> {
      return pieChartDatas(
           incomeKeys:incomeExpenseBox.keys.cast<int>()
               .where((key)=>((incomeExpenseBox.get(key)!.isIncome == isIncome)
-              && (incomeExpenseBox.get(key)!.createdDate.year==todaysDateSelector().year))).toList(),
+              && (incomeExpenseBox.get(key)!.
+              createdDate.year==todaysDateSelector().year))).toList(),
               isIncome: isIncome
       );
    }

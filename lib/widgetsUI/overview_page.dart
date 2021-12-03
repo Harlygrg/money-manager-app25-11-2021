@@ -64,7 +64,10 @@ List<String> allCategories=[];
       return total;
     }
 
-
+double balance(){
+    double balance = totalAmouns(isIncome: true)-totalAmouns(isIncome: false);
+    return balance;
+}
 
 
 
@@ -130,7 +133,9 @@ void initState() {
           totalIncomeAndExpenseBalanceTile(titleText: "Total Income", amount: "${totalAmouns(isIncome: true)}", trailingTextColor: Colors.green),
           totalIncomeAndExpenseBalanceTile(titleText: "Total Expense", amount: "${totalAmouns(isIncome: false)}", trailingTextColor: Colors.red),
           Divider(color: Color(0xff005c99),),
-          totalIncomeAndExpenseBalanceTile(titleText: "Balance", amount: "${totalAmouns(isIncome: true)-totalAmouns(isIncome: false)}", trailingTextColor: Colors.green),
+          totalIncomeAndExpenseBalanceTile(titleText: "Balance", amount: "${balance()}",
+              trailingTextColor: balance()>0?Colors.green:Colors.red
+          ),
 
           divider(height: 10),
           Container(

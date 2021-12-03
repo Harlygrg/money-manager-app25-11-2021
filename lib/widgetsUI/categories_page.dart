@@ -25,6 +25,7 @@ class _CategoriesState extends State<Categories> {
   bool incomeCategoryButtonSelected = true;
   final formKey = GlobalKey<FormState>();
   final newCategoryController = TextEditingController();
+  final updateCategoryController =TextEditingController();
   late Box<CategoryModel> categoryBox;
   bool categoriesButtonColorChecker =true;
 
@@ -116,40 +117,44 @@ class _CategoriesState extends State<Categories> {
                                         mainAxisSize: MainAxisSize.min,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          textButton(
-                                            text: "Edit",
-                                            onPressed: (){
-                                              Navigator.pop(context);
-                                              showDialog(context: context,
-                                                  builder: (context){
-                                                    return AlertDialog(
-                                                        content: Container(
-                                                          width: 100,
-                                                          child: Column(
-                                                            mainAxisSize: MainAxisSize.min,
-                                                            children: [
-                                                              TextFormField(
-                                                                key: formKey,
-                                                                decoration: InputDecoration(
-                                                                    hintText: "Category Name"
-                                                                ),
-                                                              ),
-                                                              divider(height: 5),
-                                                              elevatedButton(
-                                                                  buttonBackground: Color(0xff005c99),
-                                                                  buttonName: "Update Category",
-                                                                  onPressed: (){
-                                                                    Navigator.pop(context);
-                                                                  })
-                                                            ],
-                                                          ),
-                                                        )
-                                                    );
-                                                  }
-                                              );
-                                            },
-
-                                          ),
+                                          // textButton(
+                                          //   text: "Edit",
+                                          //   onPressed: (){
+                                          //     Navigator.pop(context);
+                                          //     showDialog(context: context,
+                                          //         builder: (context){
+                                          //           return AlertDialog(
+                                          //               content: Container(
+                                          //                 width: 100,
+                                          //                 child: Column(
+                                          //                   mainAxisSize: MainAxisSize.min,
+                                          //                   children: [
+                                          //                     TextFormField(
+                                          //                       initialValue: categoryValues.category.toString(),
+                                          //                       controller:updateCategoryController,
+                                          //                       key: formKey,
+                                          //                       decoration: InputDecoration(
+                                          //                           hintText: "Category Name",
+                                          //                       ),
+                                          //                     ),
+                                          //                     divider(height: 5),
+                                          //                     elevatedButton(
+                                          //                         buttonBackground: Color(0xff005c99),
+                                          //                         buttonName: "Update Category",
+                                          //                         onPressed: (){
+                                          //                           //categories.put(widget.key,);
+                                          //                           print("========================UPdated");
+                                          //                           Navigator.pop(context);
+                                          //                         })
+                                          //                   ],
+                                          //                 ),
+                                          //               )
+                                          //           );
+                                          //         }
+                                          //     );
+                                          //   },
+                                          //
+                                          // ),
                                           textButton(
                                             text: " Delete",
                                             onPressed: (){

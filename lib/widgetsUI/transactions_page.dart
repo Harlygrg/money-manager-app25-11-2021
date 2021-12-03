@@ -386,7 +386,7 @@ DateTime _startDate =now;
               totalIncome: sumInc.toString(),
               totalExpense: sumExp.toString()),
 
-         incomeExpenseBox.isNotEmpty ? Container(
+         if (incomeExpenseBox.isNotEmpty) Container(
             margin: EdgeInsets.only(left: 10),
             height: MediaQuery.of(context).size.height*.59,
             width: MediaQuery.of(context).size.width*.95,
@@ -493,6 +493,22 @@ DateTime _startDate =now;
                               trailingTextColor:incomeExpenseValues.isIncome==true? Colors.green:Colors.red,
                               tileColor:
                               Colors.white,
+                              onLongTap: (){
+                                showDialog(context: context,
+                                    builder: (context){
+                                      return AlertDialog(
+                                        title:Text(incomeExpenseValues.category),
+                                        content:  Text("${incomeExpenseValues.extraNotes}"),
+                                        actions: [
+                                          Text(DateFormat.MMMd().format(incomeExpenseValues.createdDate),),
+                                          Text( "${incomeExpenseValues.amount}",
+                                            style: TextStyle(
+                                              color: incomeExpenseValues.isIncome==true? Colors.green:Colors.red,),),
+                                        ],
+                                      );
+                                    }
+                                );
+                              },
                               onTap: (){
                                 //Navigator.pushNamed(context, 'UpdateOrDeleteDetails');
                                 showDialog(context: context,
@@ -548,7 +564,7 @@ DateTime _startDate =now;
                     // },
 
 
-          ):Center(child: Text("No Transactions")),
+          ) else Center(child: Text("No Transactions")),
         ],
       ),
 

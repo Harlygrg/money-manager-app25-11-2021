@@ -145,7 +145,8 @@ Widget listTileCard({
   double ?trailingFontSize,
   double ?leadingFontSize,
   Function() ?onTap,
-  double elevation=5
+  double elevation=5,
+  Function() ?onLongTap
 }){
   return Card(elevation: elevation,
     color: tileColor,
@@ -159,6 +160,7 @@ Widget listTileCard({
             fontSize:trailingFontSize ),),
 
       onTap: onTap,
+      onLongPress: onLongTap,
     ),
   );
 }

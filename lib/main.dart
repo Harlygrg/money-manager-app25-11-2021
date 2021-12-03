@@ -13,8 +13,10 @@ import 'package:money_manager_app/widgetsUI/home_page.dart';
 import 'package:money_manager_app/widgetsUI/adding_expense_or_income.dart';
 import 'package:money_manager_app/widgetsUI/piechart.dart';
 import 'package:money_manager_app/widgetsUI/testingPage.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
 const categoryBoxName ="categoryMain";
 const incomeExpenseBoxName ="incomeExpenseMain";
 void main() async{
