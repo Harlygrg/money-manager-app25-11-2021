@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:money_manager_app/main.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
 import 'package:money_manager_app/widgetsUI/custom_textfields.dart';
 import 'package:money_manager_app/widgetsUI/home_page.dart';
@@ -13,7 +14,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
+  int loginPageData =0;
   final pinController =TextEditingController();
   final forgotpinRecovary =TextEditingController();
   final newPinController =TextEditingController();
@@ -82,11 +83,18 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) => getSavedData(context));
+  }
 
   @override
 
 
   Widget build(BuildContext context) {
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Color(0xfffff7e6),
@@ -160,11 +168,23 @@ class _LoginPageState extends State<LoginPage> {
                     buttonName: "Proceed",
                     buttonBackground:  Color(0xff005c99),
                     onPressed: (){
+                      loginPageData = 15;
+                      saveDataToStorage();
                       Navigator.pushNamed(context, "HomePage");
                     }),
               )
 
             ])
     );
+  }
+  Future<void> saveDataToStorage()async{
+    print(loginPageData);
+   await sharedPreferences.setInt('login_data', loginPageData);
+  }
+}
+Future<void>getSavedData(BuildContext context)async{
+  final savedValue =  sharedPreferences.getInt("login_data");
+  if(savedValue!=0){
+    Navigator.pushReplacementNamed(context, "HomePage");
   }
 }

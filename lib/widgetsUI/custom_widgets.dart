@@ -150,6 +150,9 @@ Widget listTileCard({
 }){
   return Card(elevation: elevation,
     color: tileColor,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(3.0),
+    ),
     child: ListTile(
       leading: Text(leading,style: TextStyle(fontSize: leadingFontSize,fontFamily: "Roboto"),),
       title: Text(title,style: TextStyle(fontFamily: "Roboto",),),

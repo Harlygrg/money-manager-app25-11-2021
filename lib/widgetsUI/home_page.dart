@@ -1,10 +1,13 @@
 
+
 import 'package:flutter/material.dart';
+import 'package:money_manager_app/main.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
 import 'package:money_manager_app/widgetsUI/transactions_page.dart';
 import 'package:money_manager_app/widgetsUI/overview_page.dart';
 import 'package:money_manager_app/widgetsUI/categories_page.dart';
 import 'package:money_manager_app/widgetsUI/adding_expense_or_income.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,9 +17,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  bool isSwitched = true;
-  TimeOfDay? time;
-  TimeOfDay? picked;
   late int tabIndex;
 
 
@@ -40,21 +40,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     // TODO: implement initState
     super.initState();
     _tabController = TabController(length: 3, vsync: this,initialIndex: 0);
-    time = TimeOfDay.now();
+  }
 
-  }
-  Future<Null> selectTime(BuildContext context) async {
-    picked = await showTimePicker(context: context, initialTime: time!);
-    if(picked!=null){
-      setState(() {
-        time = picked;
-      });
-    }
-  }
-  // tabIndexValue(){
-  //   tabIndex = _tabController.index;
-  //   return tabIndex;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -75,94 +62,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           ),
           appBarRightSideIconButton(
               onPressed: (){
-                showDialog(context: context,
-                    builder: (context){
-                      return AlertDialog(
-                          content: Container(
-                            width: 100,height: 300,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                listTileCard(
-                                    leading: "Notifications",
-                                    onTap: (){
-                                      Navigator.pop(context);
-                                      //selectTime(context);
-                                      showDialog(context: context,
-                                          builder: (context){
-                                            return AlertDialog(
-                                              //content:
-                                              // Container(
-                                              //   width: 150,
-                                              //   child: Column(
-                                              //     mainAxisSize: MainAxisSize.min,
-                                              //     crossAxisAlignment:
-                                              //     CrossAxisAlignment.start,
-                                              //     children: [
-                                              //       //Text("Time${time!.hour}:${time!.minute}",style: TextStyle(fontSize: 20),),
-                                              //       // elevatedButton(
-                                              //       //     buttonName: "SetNotification",
-                                              //       //     onPressed: (){
-                                              //       // })
-                                              //     ],
-                                              //   ),
-                                              // ),
-                                              actions: [
-                                                Row(
-                                                  mainAxisAlignment:MainAxisAlignment.spaceEvenly ,
-                                                  children: [
-                                                    Text("${time!.hour}:${time!.minute}  ${time!.period}",style: TextStyle(fontSize: 15),),
-                                                    Switch(
-                                                      value: isSwitched,
-                                                      onChanged: (value) {
-                                                        //isSwitched=false;
-                                                        setState(() {
-                                                          isSwitched = value;
-                                                          print(isSwitched);
-                                                        });
-                                                        selectTime(context);
-                                                      },
-                                                      activeTrackColor: Colors.yellow,
-                                                      activeColor: Colors.orangeAccent,
-                                                    ),
-                                                  ],
-                                                )
-
-                                              ],
-                                            );
-                                          }
-                                      );
-
-                                    },
-                                    tileColor: Colors.orangeAccent
-                                ),
-                                listTileCard(
-                                    leading: "Privacy Policy",
-                                    onTap: (){},
-                                    tileColor: Colors.orangeAccent
-                                ),
-                                listTileCard(
-                                    leading: "Terms and Conditions",
-                                    onTap: (){},
-                                    tileColor: Colors.orangeAccent
-                                ),
-                                listTileCard(
-                                    leading: "About",
-                                    onTap: (){
-                                      showAboutDialog(context: context,
-                                        applicationName: "Money Manager",
-
-                                      );
-                                    },
-                                    tileColor: Colors.orangeAccent
-                                )
-
-                              ],
-                            ),
-                          )
-                      );
-                    }
-                );
+                Navigator.pushNamed(context, 'SettingsPage');
               },
               icon:Icon( Icons.settings,)
           ),
@@ -205,3 +105,61 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
   }
 }
+// listTileCard(
+// leading: "Notifications",
+// // onTap: (){
+// //   Navigator.pop(context);
+// //   selectTime(context);
+// //   showDialog(context: context,
+// //       builder: (context){
+// //         return AlertDialog(
+// //           //content:
+// //           // Container(
+// //           //   width: 150,
+// //           //   child: Column(
+// //           //     mainAxisSize: MainAxisSize.min,
+// //           //     crossAxisAlignment:
+// //           //     CrossAxisAlignment.start,
+// //           //     children: [
+// //           //       //Text("Time${time!.hour}:${time!.minute}",style: TextStyle(fontSize: 20),),
+// //           //       // elevatedButton(
+// //           //       //     buttonName: "SetNotification",
+// //           //       //     onPressed: (){
+// //           //       // })
+// //           //     ],
+// //           //   ),
+// //           // ),
+// //           actions: [
+// //             Row(
+// //               mainAxisAlignment:MainAxisAlignment.spaceEvenly ,
+// //               children: [
+// //                 Text("${time!.hour}:${time!.minute}  ${time!.period}",style: TextStyle(fontSize: 15),),
+// //                 Switch(
+// //                   value: isSwitched,
+// //                   onChanged: (bool value) {
+// //                     //isSwitched=false;
+// //
+// //                     setState(() {
+// //                       isSwitched =value;
+// //                       print(isSwitched);
+// //
+// //                     });
+// //                     if(isSwitched==true){
+// //                       selectTime(context);
+// //                     }
+// //
+// //                   },
+// //                   activeTrackColor: Colors.yellow,
+// //                   activeColor: Colors.orangeAccent,
+// //                 ),
+// //               ],
+// //             )
+// //
+// //           ],
+// //         );
+// //       }
+// //   );
+// //
+// // },
+// tileColor: Colors.orangeAccent
+// ),

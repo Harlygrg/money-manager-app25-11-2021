@@ -14,13 +14,17 @@ import 'package:money_manager_app/widgetsUI/adding_expense_or_income.dart';
 import 'package:money_manager_app/widgetsUI/piechart.dart';
 import 'package:money_manager_app/widgetsUI/testingPage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:money_manager_app/widgetsUI/settings_page.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 const categoryBoxName ="categoryMain";
 const incomeExpenseBoxName ="incomeExpenseMain";
+  late SharedPreferences sharedPreferences;
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  sharedPreferences = await SharedPreferences.getInstance();
   Directory document = await getApplicationDocumentsDirectory();
   Hive.init(document.path);
   Hive.registerAdapter(CategoryModelAdapter());
@@ -42,6 +46,7 @@ class MyApp extends StatelessWidget {
         'AddIncomeOrExpense':(context) =>  AddIncomeOrExpense(),
         'pie_chart':(context) =>  Piechart(),
         'HomePage':(context) =>  HomePage(),
+        'SettingsPage':(context) =>  Setting(),
 
 
       },
