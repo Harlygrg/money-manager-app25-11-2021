@@ -38,6 +38,10 @@ dependencies:
   syncfusion_flutter_datepicker:
   flutter_local_notifications:
   provider:
+  timezone:
+  rxdart:
+  flutter_native_timezone:
+  http:
 
 
   # The following adds the Cupertino Icons font to your application.
