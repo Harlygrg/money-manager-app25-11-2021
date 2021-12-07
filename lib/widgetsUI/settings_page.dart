@@ -16,7 +16,6 @@ class Setting extends StatefulWidget {
 
 class _SettingState extends State<Setting> {
   bool isSwitched =false;
-  String buttonText= "SelectTime";
   TimeOfDay? picked;
   TimeOfDay notificationTime = TimeOfDay.now();
   int hr =0;
@@ -27,8 +26,9 @@ class _SettingState extends State<Setting> {
     if(picked!=null){
       setState(() {
         _selectedTime =picked!.format(context);
-        buttonText=_selectedTime;
         notificationTime=picked!;
+        hr =notificationTime.hour;
+        mn =notificationTime.minute;
 
       });
     }
@@ -66,7 +66,9 @@ class _SettingState extends State<Setting> {
                 borderRadius: BorderRadius.circular(3.0)),
                   child: ListTile(
                     leading: Text("Notification",
-                      style:TextStyle(fontSize: 18) ,),
+                      style:TextStyle(fontSize: 18,
+                          fontFamily:  "Outfit",
+                      fontWeight: FontWeight.w900) ,),
                     tileColor: Colors.orangeAccent,
                     title: TextButton(
                         onPressed: (){
@@ -76,25 +78,26 @@ class _SettingState extends State<Setting> {
                           });
                         },
                       child:
-                        Text(buttonText,
-                          style: TextStyle(color: Colors.black,fontSize: 18),),
+                        Text(_selectedTime,
+                          style: TextStyle(color: Color(0xff005c99),fontSize: 18,
+                              fontFamily:  "Outfit",
+                              fontWeight: FontWeight.w900),),
                     ) ,
                     trailing:Switch(
                       value: isSwitched,
                       onChanged: (bool value) {
+                        print("------------#####  $_selectedTime");
                         saveSettingsPageDataToStorage(context);
-                        getSavedDataSettingsPage(context);
+                        //getSavedDataSettingsPage(context);
                         setState(() {
-                          buttonText =_selectedTime;
                           isSwitched =value;
-                          hr =notificationTime.hour;
-                          mn =notificationTime.minute;
-                          if(isSwitched){
 
+                          print("%%%%%% hour default: $hr, min defalult : $mn");
+                          if(isSwitched){
                             NotificationApi.showScheduledNotification(
                                 scheduledTime: Time(hr,mn),
-                                title: "Harly George",
-                                body: "Hi I got it",
+                                title: "Money Manager reminder",
+                                body: "Don't forget to add your spending for today!",
                                 payload: 'HomePage'
                             );
                           }
@@ -160,17 +163,15 @@ class _SettingState extends State<Setting> {
     print("$savedValue got from database ----------------");
     print("$savedHour hour got from database ----------------");
     print("$savedMinute minute got from database ----------------");
-  if(isSwitched==true){
+
     if(savedHour!>12){
-      buttonText = "${savedHour-12}:$savedMinute PM";
+      _selectedTime = "${savedHour-12}:$savedMinute PM";
     }
     else{
-      buttonText = "$savedHour:$savedMinute AM";
+      _selectedTime = "$savedHour:$savedMinute AM";
     }
-  }
-  else{
-    buttonText ="Select Time";
-  }
+
+
     if(savedHour!=hr && savedMinute!=mn){
       hr = savedHour!;
       mn =savedMinute!;

@@ -538,8 +538,8 @@ DateTime _startDate =now;
                           }, separatorBuilder: (BuildContext context, int index)
                         {
                           return    Divider(
-                            thickness: 2.5,
-                            color: Color(0xffccccff),
+                            thickness: 1.5,
+                            color: Color(0xff0000FF),
                           );
                         },
                         );

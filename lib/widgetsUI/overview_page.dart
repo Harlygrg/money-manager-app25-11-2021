@@ -1,5 +1,6 @@
 
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_manager_app/actions/data_model.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
@@ -22,6 +23,7 @@ List<String> incCategories=[];
 List<String> expCategories=[];
 List<double> allAmounts=[];
 List<String> allCategories=[];
+double prgInd =0;
 //List<double>totalAmountsList=[];
 
   Map<String,double> incExpCatWiseDatas({required bool isIncome}){
@@ -69,7 +71,10 @@ double balance(){
     return balance;
 }
 
-
+double progresIndicatorVal (){
+  prgInd = (totalAmouns(isIncome: true) -totalAmouns(isIncome: false))/totalAmouns(isIncome: true);
+  return prgInd;
+}
 
   @override
 void initState() {
@@ -99,6 +104,7 @@ void initState() {
     required String titleText,
     required String amount,
     required final Color trailingTextColor,
+    FontWeight fontWeight= FontWeight.bold,
     String fontFamily ="ArchitectsDaughter"
   }){
     return Padding(
@@ -108,11 +114,11 @@ void initState() {
         children: [
           incomeExpenseBalanceText(
             text: titleText,color: Colors.black,
-            fontSize: 17,fontFamily: fontFamily,
+            fontSize: 17,fontFamily: fontFamily,fontWeight: fontWeight
           ),
           incomeExpenseBalanceText(
               text: amount,color: trailingTextColor,fontSize: 17,
-              fontFamily: fontFamily,fontWeight: FontWeight.bold
+              fontFamily: fontFamily,fontWeight: fontWeight
           ),
         ],
       ),
@@ -135,6 +141,17 @@ void initState() {
           Divider(color: Color(0xff005c99),),
           totalIncomeAndExpenseBalanceTile(titleText: "Balance", amount: "${balance()}",
               trailingTextColor: balance()>0?Colors.green:Colors.red
+          ),
+          SizedBox(width: MediaQuery.of(context).size.width*.9,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(3)),
+              child: LinearProgressIndicator(
+                backgroundColor: Colors.red,
+                valueColor: AlwaysStoppedAnimation(Colors.green),
+                minHeight: 8,
+                value:progresIndicatorVal(),
+              ),
+            ),
           ),
 
           divider(height: 10),
@@ -171,10 +188,11 @@ void initState() {
 
                       return totalIncomeAndExpenseBalanceTile(
                           titleText: category,
+                          fontWeight: FontWeight.w900,
                           amount: amount.toString(),
                           trailingTextColor: position<incCategories.length ?
                           Colors.green:Colors.red,
-                          fontFamily: "Roboto"
+                          fontFamily: "Outfit"
                       );
                     }, separatorBuilder: (BuildContext context, int index) {
                     return Divider(color: Color(0xff66b3ff),

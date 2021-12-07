@@ -1,5 +1,7 @@
 
 
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -154,13 +156,16 @@ Widget listTileCard({
       borderRadius: BorderRadius.circular(3.0),
     ),
     child: ListTile(
-      leading: Text(leading,style: TextStyle(fontSize: leadingFontSize,fontFamily: "Roboto"),),
-      title: Text(title,style: TextStyle(fontFamily: "Roboto",),),
+      leading: Text(leading,style: TextStyle(fontSize: leadingFontSize,
+          fontFamily: "Outfit",fontWeight: FontWeight.w900),),
+      title: Text(title,style: TextStyle(fontFamily: "Outfit",
+          fontWeight: FontWeight.w900),),
       trailing: Text(
         trailing,
         style: TextStyle(
             color: trailingTextColor,
-            fontSize:trailingFontSize ),),
+            fontSize:trailingFontSize,fontFamily: "Outfit",
+            fontWeight: FontWeight.w900 ),),
 
       onTap: onTap,
       onLongPress: onLongTap,
