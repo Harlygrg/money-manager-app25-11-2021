@@ -126,7 +126,9 @@ DateTime _startDate =now;
             return
               (incomeExpenseBox.get(key)!.isIncome == true)
                   &&
-                  (incomeExpenseBox.get(key)!.createdDate.month==monthlyDateSelector().month);
+                  (incomeExpenseBox.get(key)!.createdDate.month==monthlyDateSelector().month)
+                  &&
+                    (incomeExpenseBox.get(key)!.createdDate.year==todaysDateSelector().year);
           } )
           .toList();
       double sumIncMonthly=0;
@@ -219,7 +221,9 @@ DateTime _startDate =now;
               return
                 (incomeExpenseBox.get(key)!.isIncome == false)
                     &&
-                    (incomeExpenseBox.get(key)!.createdDate.month==monthlyDateSelector().month);
+                    (incomeExpenseBox.get(key)!.createdDate.month==monthlyDateSelector().month)
+                    &&
+                      (incomeExpenseBox.get(key)!.createdDate.year==todaysDateSelector().year);
             } )
             .toList();
         double sumExpMonthly=0;
@@ -294,8 +298,10 @@ DateTime _startDate =now;
                         onPressed: (){
                           if(dropdownValue=="Monthly"){
                             setState(() {
-
+                              if(incrementCounter<11){
                                 incrementCounter=incrementCounter+1;
+                              }
+
                                 selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
                                 incomeSum();
                                 expenseSum();
@@ -393,8 +399,6 @@ DateTime _startDate =now;
                     child: ValueListenableBuilder(
                       valueListenable: incomeExpenseBox.listenable(),
                       builder: (context, Box<IncomeExpenseModel> incomeExpense,_){
-
-
                         List<int> keys;
                         if(dropdownValue=="All"){
                           List<int> keysUnsorted;

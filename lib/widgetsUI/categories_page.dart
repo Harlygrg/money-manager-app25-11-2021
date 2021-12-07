@@ -209,6 +209,9 @@ class _CategoriesState extends State<Categories> {
                                       if(value == null || value.isEmpty){
                                         return 'Please Enter Category';
                                       }
+                                      else if(value.length>=15){
+                                        return 'Please Enter less than 20 letters';
+                                      }
                                       return null;
                                     },
                                     controller:newCategoryController ,

@@ -33,9 +33,7 @@ dependencies:
   hive_flutter:
   intl:
   path_provider:
-  flutter_datetime_picker:
   pie_chart:
-  syncfusion_flutter_datepicker:
   flutter_local_notifications:
   provider:
   timezone:

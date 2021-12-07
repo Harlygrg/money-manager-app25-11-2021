@@ -72,8 +72,15 @@ double balance(){
 }
 
 double progresIndicatorVal (){
-  prgInd = (totalAmouns(isIncome: true) -totalAmouns(isIncome: false))/totalAmouns(isIncome: true);
-  return prgInd;
+    if(totalAmouns(isIncome: true)>0){
+      prgInd = (totalAmouns(isIncome: true) -totalAmouns(isIncome: false))/totalAmouns(isIncome: true);
+      return prgInd;
+    }
+    else{
+      prgInd =0;
+      return prgInd;
+    }
+
 }
 
   @override

@@ -148,7 +148,19 @@ class _PiechartState extends State<Piechart> {
 
   }
 
-  List<Color> colorList=[Colors.green,Colors.red,Colors.yellow,Colors.orangeAccent];
+  List<Color> colorList=[
+    Colors.green,
+    Colors.blue,
+    Colors.red,
+    Colors.purple,
+    Colors.yellow,
+    Colors.blueAccent,
+    Colors.amberAccent,
+    Colors.teal,
+    Colors.deepPurpleAccent,
+    Colors.pinkAccent,
+    Colors.deepOrangeAccent,
+    Colors.lime,];
   @override
   void initState() {
     // TODO: implement initState
@@ -297,13 +309,13 @@ class _PiechartState extends State<Piechart> {
 }){
     return PieChart(
       dataMap: piechartDatas,
-      animationDuration: Duration(microseconds: 750),
+      animationDuration: Duration(milliseconds: 1500),
       chartLegendSpacing: 40,
       chartRadius: MediaQuery.of(context).size.width*.4,
       colorList: colorList,
       initialAngleInDegree: 0,
       chartType: ChartType.ring,
-      ringStrokeWidth: 60,
+      ringStrokeWidth: 70,
       legendOptions: LegendOptions(
         showLegendsInRow: false,
         legendPosition: LegendPosition.right,

@@ -7,7 +7,6 @@ import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
 import 'package:money_manager_app/actions/data_model.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../main.dart';
@@ -34,6 +33,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
   String _date = DateFormat.yMMMEd().format(nowq);
   String dropdownValue="apple";
   late Box<IncomeExpenseModel> incomeAndExpenseBox;
+
 
   @override
   void initState() {
@@ -114,25 +114,19 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
           ],),
 
           divider(height: 5),
+          //-------------------------------------------------------------------------------------------------------------
           ListTile(
-            onTap: (){
-              DatePicker.showDatePicker(
-                    context,
-                  theme: DatePickerTheme(
-                    containerHeight: 210,
-                  ),showTitleActions: true,
-                  minTime: DateTime(2010,12,31),
-                  maxTime: currentDate,
-                  onConfirm: (date){
-                    print("confirm $date");
-                    currentDate =date;
-                    _date = DateFormat.yMMMEd().format(date);
-                    setState(() {
-                    });
+            onTap: ()async{
+               currentDate =(await showDatePicker(
+                  context: context,
+                  initialDate:DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day),
+                  firstDate: DateTime(2010,12,31),
+                  lastDate:DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day), ))!;
+               setState(() {
+                 _date = DateFormat.yMMMEd().format(currentDate);
+               });
 
-                  },
-                  //currentTime: DateTime.now(), locale: LocaleType.en
-              );
+               print("current date ==$currentDate");
             },
             title: Text(
              " $_date",
@@ -437,3 +431,20 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
     );
   }
 }
+// DatePicker.showDatePicker(
+//       context,
+//     theme: DatePickerTheme(
+//       containerHeight: 210,
+//     ),showTitleActions: true,
+//     minTime: DateTime(2010,12,31),
+//     maxTime: currentDate,
+//     onConfirm: (date){
+//       print("confirm $date");
+//       currentDate =date;
+//       _date = DateFormat.yMMMEd().format(date);
+//       setState(() {
+//       });
+//
+//     },
+//     //currentTime: DateTime.now(), locale: LocaleType.en
+// );

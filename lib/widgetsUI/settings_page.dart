@@ -173,7 +173,7 @@ class _SettingState extends State<Setting> {
 
 
     if(savedHour!=hr && savedMinute!=mn){
-      hr = savedHour!;
+      hr = savedHour;
       mn =savedMinute!;
     }
     if(savedValue==false){
