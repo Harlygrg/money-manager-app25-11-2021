@@ -4,8 +4,11 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 final Color appbarBackgroundColor = Color(0xff005c99);
+final Color color2 = Color(0xff00bfff);
+
 Widget appBarTexts({
   required String text,
   Color textColor=Colors.white,
@@ -13,11 +16,11 @@ Widget appBarTexts({
 }){
   return Text(text,
     style: TextStyle(shadows:const [
-      // Shadow(
-      //   color: Colors.grey,
-      //   blurRadius: 1,
-      //   offset: Offset(2,2),
-      // )
+      Shadow(
+        color: Colors.grey,
+        blurRadius: 1,
+        offset: Offset(2,2),
+      )
     ],
       fontSize: fontSize,
       fontWeight: FontWeight.bold,
@@ -64,6 +67,7 @@ Widget elevatedButton({
   required String buttonName,
   required Function() onPressed,
   required Color buttonBackground,
+  Color ?textColor,
   double borderRadius =2,
 }){
   return  ElevatedButton(style: ElevatedButton.styleFrom(
@@ -74,7 +78,7 @@ Widget elevatedButton({
     onPrimary: Colors.white, // foreground
   ),
       onPressed: onPressed,
-      child: Text(buttonName,
+      child: Text(buttonName,style: TextStyle(color:textColor ,fontFamily: "Outfit",fontWeight: FontWeight.w500),
       ));
 }
 
@@ -82,32 +86,54 @@ Widget elevatedButton({
 
 Widget totalIncomeOrExpense({
   required String value,
-  required backgroundColor,
-  required textColor,
+  required String value2,
+  required List<Color> colorList,
+  required Color textColor,
 }){
-  return Container(
-    height: 50,
-    decoration: BoxDecoration(
-      color: backgroundColor,
-      borderRadius: BorderRadius.circular(0),
-    ),
-    child: Center(child:
-    appBarTexts(text: value,fontSize: 15,textColor:textColor ),),
+  return   Card(
+    elevation: 5,
+    child: Container(
+      width: 150,
+      height: 50,
+      decoration: BoxDecoration(
+          gradient:LinearGradient(
+              colors:
+              colorList,
+          ),
+          borderRadius: BorderRadius.circular(5)
+      ),
+        //value
+       child: Center(child:RichText(
+         text: TextSpan(
+             children: <TextSpan>[
+               TextSpan(text: value,
+                   style: TextStyle(fontSize: 15,fontFamily: "Outfit",fontWeight: FontWeight.w400,color: textColor)),
+               TextSpan(text:value2,style: TextStyle(fontSize: 18,fontFamily: "Outfit",color: textColor,
+                   fontWeight: FontWeight.w500)),
+             ]
+         ),
+       ),
+
+    )),
   );
 }
 
 
 
 Widget totalIncomeAndTotalExpenseShowingRow({
+  required String totalIncomeText,
   required String totalIncome,
+  required String totalExpenseText,
   required String totalExpense,
 
 }){
   return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
-      Expanded(child: totalIncomeOrExpense(value: totalIncome, backgroundColor: Color(0xff80d4ff),textColor: Color(0xff009900))),
-
-      Expanded(child: totalIncomeOrExpense(value: totalExpense, backgroundColor: Color(0xffffc2b3),textColor: Color(0xffff3300))),
+      totalIncomeOrExpense(value: totalIncomeText,textColor: Colors.white,
+          value2:totalIncome,colorList: [appbarBackgroundColor,color2] ),
+      totalIncomeOrExpense(value: totalExpenseText,textColor: Colors.black,
+          value2: totalExpense,colorList: [color2,appbarBackgroundColor,])
 
     ],);
 }
@@ -144,28 +170,33 @@ Widget listTileCard({
   String trailing ='',
   Color tileColor =Colors.white,
   Color trailingTextColor= Colors.black,
+  Color leadingTextColor= Colors.black,
+  Color titleTextColor= Colors.black,
   double ?trailingFontSize,
   double ?leadingFontSize,
+  FontWeight ?leadingFontWeight,
   Function() ?onTap,
   double elevation=5,
   Function() ?onLongTap
 }){
   return Card(elevation: elevation,
     color: tileColor,
+    shadowColor: Colors.black,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(3.0),
     ),
     child: ListTile(
-      leading: Text(leading,style: TextStyle(fontSize: leadingFontSize,
-          fontFamily: "Outfit",fontWeight: FontWeight.w900),),
+      leading: Text(leading,style: TextStyle(fontSize: leadingFontSize,color: leadingTextColor,
+          fontFamily: "Outfit",fontWeight: FontWeight.w500,),),
       title: Text(title,style: TextStyle(fontFamily: "Outfit",
-          fontWeight: FontWeight.w900),),
+          color: titleTextColor,fontWeight: FontWeight.w500,
+          ),),
       trailing: Text(
         trailing,
         style: TextStyle(
             color: trailingTextColor,
-            fontSize:trailingFontSize,fontFamily: "Outfit",
-            fontWeight: FontWeight.w900 ),),
+            fontSize:trailingFontSize,fontFamily: "Outfit",fontWeight: FontWeight.w500,
+            ),),
 
       onTap: onTap,
       onLongPress: onLongTap,
@@ -179,8 +210,11 @@ Widget floatingActoinButton({
 }){
   return FloatingActionButton(
     onPressed: actions,
+    shape:const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    ),
     backgroundColor: appbarBackgroundColor,
-    child: Icon(Icons.add),
+    child:const Icon(Icons.add),
   );
 }
 
@@ -203,7 +237,7 @@ Widget timePeriodeChageIcon({
   return RawMaterialButton(
     onPressed: onPressed,
     elevation: 2.0,
-    fillColor: Colors.blue,
+    fillColor: appbarBackgroundColor,
     child: icon,
     padding: EdgeInsets.all(1.0),
     shape: CircleBorder(),

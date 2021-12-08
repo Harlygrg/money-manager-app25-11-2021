@@ -1,4 +1,5 @@
 
+
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -111,6 +112,7 @@ void initState() {
     required String titleText,
     required String amount,
     required final Color trailingTextColor,
+    Color titleColor=Colors.black,
     FontWeight fontWeight= FontWeight.bold,
     String fontFamily ="ArchitectsDaughter"
   }){
@@ -120,7 +122,7 @@ void initState() {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           incomeExpenseBalanceText(
-            text: titleText,color: Colors.black,
+            text: titleText,color: titleColor,
             fontSize: 17,fontFamily: fontFamily,fontWeight: fontWeight
           ),
           incomeExpenseBalanceText(
@@ -136,36 +138,88 @@ void initState() {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(left: 5,right: 5),
       height: double.infinity,
       width: double.infinity,
       child: Column(
         children: [
 
           divider(height: 10),
-          incomeExpenseBalanceText(text: monthYear,fontSize: 20,color: Colors.black,fontFamily: "PermanentMarker",fontWeight: FontWeight.normal),
-          totalIncomeAndExpenseBalanceTile(titleText: "Total Income", amount: "${totalAmouns(isIncome: true)}", trailingTextColor: Colors.green),
-          totalIncomeAndExpenseBalanceTile(titleText: "Total Expense", amount: "${totalAmouns(isIncome: false)}", trailingTextColor: Colors.red),
-          Divider(color: Color(0xff005c99),),
-          totalIncomeAndExpenseBalanceTile(titleText: "Balance", amount: "${balance()}",
-              trailingTextColor: balance()>0?Colors.green:Colors.red
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              elevation: 5,
+              child: Container(
+                width: MediaQuery.of(context).size.width*.9,
+                height: MediaQuery.of(context).size.height*.185,
+                padding: EdgeInsets.all(8),
+                //margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                decoration: BoxDecoration(
+                  //color: Color(0xff00bfff),
+                  gradient: LinearGradient(
+                      colors:
+                      [appbarBackgroundColor,color2]
+
+                  ),
+                  borderRadius: BorderRadius.circular(5)
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(monthYear,style: TextStyle(
+                      fontFamily: "Outfit",color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500
+                    ),),
+                    divider(height: 5),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                          children:  <TextSpan>[
+                            TextSpan(text: 'Balance: ',
+                                style: TextStyle(fontSize: 15,fontFamily: "Outfit",fontWeight: FontWeight.w400)),
+                            TextSpan(text: '${balance()}',
+                                style: TextStyle(fontSize: 25,fontFamily: "Outfit",fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        incomeExpenseContainer(text1: " Earned\n", text2:"   ${totalAmouns(isIncome: true)}"),
+                        incomeExpenseContainer(text1: "Spent\n ", text2:" ${totalAmouns(isIncome: false)}     ")
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+            Text("income",style: TextStyle(fontFamily: "Outfit",
+                color: appbarBackgroundColor,fontWeight:FontWeight.bold ),),
+            Text("expense",style: TextStyle(fontFamily: "Outfit",
+                color: color2,fontWeight: FontWeight.bold),),
+          ],),
+          divider(height: 5),
           SizedBox(width: MediaQuery.of(context).size.width*.9,
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(3)),
               child: LinearProgressIndicator(
-                backgroundColor: Colors.red,
-                valueColor: AlwaysStoppedAnimation(Colors.green),
+                backgroundColor: color2,
+                valueColor: AlwaysStoppedAnimation(appbarBackgroundColor),
                 minHeight: 8,
                 value:progresIndicatorVal(),
               ),
             ),
           ),
-
+//--------------------------------------------------------------------------------------------------------------------
           divider(height: 10),
-          Container(
-            height: MediaQuery.of(context).size.height*.53,
-            width: MediaQuery.of(context).size.width*.95,
-            margin: EdgeInsets.only(left: 10),
+          Expanded(
             child: ValueListenableBuilder(
 
                 valueListenable: incomeExpenseBox.listenable(),
@@ -194,24 +248,63 @@ void initState() {
                       double amount   = allAmounts[position];
 
                       return totalIncomeAndExpenseBalanceTile(
+                        // titleColor: position<incCategories.length ?
+                        // appbarBackgroundColor:color2,
                           titleText: category,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.w500,
                           amount: amount.toString(),
                           trailingTextColor: position<incCategories.length ?
-                          Colors.green:Colors.red,
+                          appbarBackgroundColor:color2,
                           fontFamily: "Outfit"
                       );
                     }, separatorBuilder: (BuildContext context, int index) {
-                    return Divider(color: Color(0xff66b3ff),
-                      thickness: 1,);
+                    return SizedBox();
+                      // Divider(color: color2,
+                      // thickness: 1,);
                   },
                   );
                 }
-            )
-
+            ),
           ),
 
         ],
+      ),
+    );
+  }
+  Widget incomeExpenseContainer({
+  required String text1,
+    required String text2,
+
+}){
+    return
+    //   SizedBox(
+    //   width: 120,
+    //   child:RichText(
+    //     text: TextSpan(
+    //         children: <TextSpan>[
+    //           TextSpan(text: text1,
+    //               style: TextStyle(fontSize: 15,fontFamily: "Outfit",fontWeight: FontWeight.w400)),
+    //           TextSpan(text:text2,style: TextStyle(fontSize: 18,fontFamily: "Outfit")),
+    //         ]
+    //     ),
+    //   ),
+    // );
+      Container(
+      width: 150,
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          //color: Color(0xff005c99),
+        border: Border.all(color: Colors.white),
+          borderRadius: BorderRadius.all(Radius.circular(5))
+      ),
+      child:RichText(
+        text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(text: text1,
+                  style: TextStyle(fontSize: 15,fontFamily: "Outfit",fontWeight: FontWeight.w400)),
+              TextSpan(text:text2,style: TextStyle(fontSize: 18,fontFamily: "Outfit",fontWeight: FontWeight.w500)),
+            ]
+        ),
       ),
     );
   }

@@ -47,14 +47,15 @@ class _CategoriesState extends State<Categories> {
         children: [
 
           divider(height: 10),
-          SizedBox(width: 186,
+          SizedBox(width: 188,
             child: Row(
               //mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 elevatedButton(
                     borderRadius: 0,
                     buttonName: "INCOME",
-                    buttonBackground: categoriesButtonColorChecker?Color(0xff005c99):Colors.grey,
+                    buttonBackground: categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
+                    textColor: !categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
                     onPressed: (){
                       incomeCategoryButtonSelected = true;
                       //incomeTrue =true;
@@ -67,7 +68,8 @@ class _CategoriesState extends State<Categories> {
                 elevatedButton(
                     buttonName: "EXPENSE",
                     borderRadius: 0,
-                    buttonBackground: !categoriesButtonColorChecker ?Color(0xff005c99):Colors.grey,
+                    buttonBackground: !categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
+                    textColor: categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
                     onPressed: (){
                       //incomeTrue =false;
                       incomeCategoryButtonSelected = false;
@@ -92,7 +94,8 @@ class _CategoriesState extends State<Categories> {
                   keys = categories.keys.cast<int>().where((key) => !categories.get(key)!.isIncome).toList();
                 }
                 //keys =categories.keys.cast<int>().toList();
-                return ListView.separated(
+                return
+                  ListView.separated(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: keys.length,
@@ -102,8 +105,8 @@ class _CategoriesState extends State<Categories> {
                     return listTileCard(
                         leading:categoryValues!.category.toString(),
                         trailingTextColor: Colors.black,
-                        tileColor: Colors.white,
-                        elevation: 0,
+                        tileColor: color2,
+                        elevation: 5,
                         leadingFontSize: 20,
 
 
@@ -176,10 +179,7 @@ class _CategoriesState extends State<Categories> {
                     );
                   }, separatorBuilder: (BuildContext context, int index)
                 {
-                  return    Divider(
-                    thickness: 1.5,
-                    color: Color(0xffccccff),
-                  );
+                  return    divider();
                 },
                 );
               },

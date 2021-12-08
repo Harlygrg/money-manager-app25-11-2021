@@ -274,304 +274,381 @@ DateTime _startDate =now;
   @override
   Widget build(BuildContext context) {
 
-    return SizedBox(
-      //backgroundColor: Color(0xfffff7e6),
-      height: double.infinity,
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          divider(height: 5),
+    return Padding(
+      padding: const EdgeInsets.only(left: 10,right: 10),
+      child: SizedBox(
+        //backgroundColor: Color(0xfffff7e6),
+        height: double.infinity,
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            divider(height: 5),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              divider(width: 2),
-              dropdownValue=="Monthly"?
-              Container(
-                width: 176,
-                margin: EdgeInsets.only(right: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    timePeriodeChageIcon(
-                        onPressed: (){
-                          if(dropdownValue=="Monthly"){
-                            setState(() {
-                              if(incrementCounter<11){
-                                incrementCounter=incrementCounter+1;
-                              }
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                divider(width: 2),
+                dropdownValue=="Monthly"?
+                Container(
+                  width: 176,
+                  margin: EdgeInsets.only(right: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      timePeriodeChageIcon(
+                          onPressed: (){
+                            if(dropdownValue=="Monthly"){
+                              setState(() {
+                                if(incrementCounter<11){
+                                  incrementCounter=incrementCounter+1;
+                                }
 
-                                selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
-                                incomeSum();
-                                expenseSum();
+                                  selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
+                                  incomeSum();
+                                  expenseSum();
 
-                            });
-                          }
-                        },
-                        icon: const Icon(Icons.arrow_back_ios,size: 25,)
-                    ),
-                    timePeriodeChageIcon(
-                        onPressed: (){
-                          if(dropdownValue=="Monthly"){
-                            setState(() {
-                              if(incrementCounter>0) {
-                                incrementCounter = incrementCounter - 1;
-                                selectedMonth = DateFormat('MMMM').format(
-                                    monthlyDateSelector());
-                                incomeSum();
-                                expenseSum();
-                              }
-                            });
-                          }
-                        },
-                        icon: const Icon(Icons.arrow_forward_ios_rounded,size: 25,)
-                        //arrow_back_ios
-                    )
-                  ],
-                ),
-              ):divider(),
-              Container(
-                margin: const EdgeInsets.only(top: 5),
-                height: 40,
-                padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Color(0xff005c99),
-                      width: 2,
-                      style: BorderStyle.solid
+                              });
+                            }
+                          },
+                          icon: const Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,)
+                      ),
+                      timePeriodeChageIcon(
+                          onPressed: (){
+                            if(dropdownValue=="Monthly"){
+                              setState(() {
+                                if(incrementCounter>0) {
+                                  incrementCounter = incrementCounter - 1;
+                                  selectedMonth = DateFormat('MMMM').format(
+                                      monthlyDateSelector());
+                                  incomeSum();
+                                  expenseSum();
+                                }
+                              });
+                            }
+                          },
+                          icon: const Icon(Icons.arrow_forward_ios,size: 25,color: Colors.white,)
+                          //arrow_back_ios
+                      )
+                    ],
                   ),
-                  borderRadius: BorderRadius.all(Radius.circular(3))
-                ),
-                child: DropdownButton(
-                  underline: Text(""),
-                  style:  const TextStyle(
-                      color: Colors.blue,
-                    fontFamily: "BalsamiqSans",
-                    fontSize: 17,
-                  ),
-                  focusColor:Colors.white,
-                  hint: Text("Select Category"),
-                  items: items.map((itemsname) {
-                    return DropdownMenuItem(
-                      value: itemsname,
-                      child: Text(itemsname),
-                    );
-                  }).toList(),
-                  onChanged:(String ?newValue){
-                    setState(() {
-                      dropdownValue =newValue!;
-                      incomeSum();
-                      expenseSum();
-                    });
-                  },
-                  value: dropdownValue,
-                ),
-              ),
-              divider(height: 15),
-            ],
-          ),
-          dropdownValue=="Monthly"?
-          Text(
-            selectedMonth,
-            style: TextStyle(fontFamily: "BalsamiqSans",fontSize: 17),):
-              divider(),
-          dropdownValue=="Select Range" ?
-              Padding(
-                padding: const EdgeInsets.only(top: 10,bottom: 10),
-                child: dateRangeShow(
-                    initialDate: DateFormat('MMMMd').format(dateRange.start),
-                    finalDate: DateFormat('MMMMd').format(dateRange.end),
-                    onTap: (){
-                      pickDateRange(context);
-                    }
-                ),
-              ):SizedBox(height: 1,),
-          divider(height: 5),
-          totalIncomeAndTotalExpenseShowingRow(
-              totalIncome: sumInc.toString(),
-              totalExpense: sumExp.toString()),
-
-         if (incomeExpenseBox.isNotEmpty) Container(
-            margin: EdgeInsets.only(left: 10),
-            height: MediaQuery.of(context).size.height*.59,
-            width: MediaQuery.of(context).size.width*.95,
-                    child: ValueListenableBuilder(
-                      valueListenable: incomeExpenseBox.listenable(),
-                      builder: (context, Box<IncomeExpenseModel> incomeExpense,_){
-                        List<int> keys;
-                        if(dropdownValue=="All"){
-                          List<int> keysUnsorted;
-                          keysUnsorted =incomeExpense.keys.cast<int>().where((key) =>
-                          incomeExpense.get(key)!.createdDate.year==todaysDateSelector().year).toList();
-                          List<DateTime> datesList=[];
-                          for(int i=0;i<keysUnsorted.length;i++){
-                            DateTime date = incomeExpense.get(keysUnsorted[i])!.createdDate;
-                            datesList.add(date);
-                          }
-                          datesList.sort();
-                          List<DateTime> reversedDateList = List.from(datesList.reversed);
-                          var duplicatesRemovedFromReversedDateList= reversedDateList.toSet().toList();
-                          reversedDateList =duplicatesRemovedFromReversedDateList.toList();
-                          List<int> sortedKeys=[];
-                          List<int> keyInorder;
-                          for(int j=0;j<reversedDateList.length;j++){
-                            keyInorder = incomeExpense.keys.cast<int>().where((key) =>
-                            incomeExpense.get(key)!.createdDate==reversedDateList[j]).toList();
-                            List<int> reversedList = List.from(keyInorder.reversed);
-                            sortedKeys.addAll(reversedList);
-                            print("------keyIn order $reversedList");
-
-                          }
-                          keys= sortedKeys.toList();
-                          print("----------$keys");
-                        }
-                        else if(dropdownValue=="Today") {
-                          keys = incomeExpense.keys.cast<int>().where((key) =>
-                          incomeExpense.get(key)!.createdDate==todaysDateSelector()).toList();
-                          var reversedKeys=keys.reversed;
-                          keys = reversedKeys.toList();
-                        }
-                        else if(dropdownValue=="Yesterday"){
-                          keys = incomeExpense.keys.cast<int>().where((key) =>
-                          incomeExpense.get(key)!.createdDate==yesterdaysDateSelector()).toList();
-                          var reversedKeys=keys.reversed;
-                          keys = reversedKeys.toList();
-                        }
-                        else if(dropdownValue=="Monthly"){
-                          List<int> unsortedKeysForOneMonth;
-                          unsortedKeysForOneMonth = incomeExpense.keys.cast<int>().where((key) =>
-                          (incomeExpense.get(key)!.createdDate.month==monthlyDateSelector().month)&&
-                              (incomeExpense.get(key)!.createdDate.year==monthlyDateSelector().year)).toList();
-                          selectedMonth =DateFormat('MMMM').format(monthlyDateSelector());
-                          List<DateTime> monthlyDatesList=[];
-                          for(int i=0;i<unsortedKeysForOneMonth.length;i++){
-                            DateTime date = incomeExpense.get(unsortedKeysForOneMonth[i])!.createdDate;
-                            monthlyDatesList.add(date);
-                          }
-                          monthlyDatesList.sort();
-                          var duplicateDatesRemoved = monthlyDatesList.reversed.toSet().toList();
-                          monthlyDatesList = duplicateDatesRemoved.toList();
-                          Iterable<int> monthelyKeysInorder;
-                          List<int> sortedMothlyKeys=[];
-                          for(int j=0;j<monthlyDatesList.length;j++){
-                            monthelyKeysInorder = incomeExpense.keys.cast<int>().where((key) =>
-                            incomeExpense.get(key)!.createdDate==monthlyDatesList[j]);
-                            sortedMothlyKeys.addAll(monthelyKeysInorder);
-
-                          }
-                          keys =sortedMothlyKeys.toList();
-                          //print("selectedMonth:----------$selectedMonth");
-
-                        }
-                        else if(dropdownValue=="Select Range"){
-                          List <int> range=[];
-                          _startDate=dateRange.start;
-                          _endDate =dateRange.end;
-                          int difference = _endDate.difference(_startDate).inDays;
-                          for(int i =0;i<=difference; i++){
-                            range.addAll(incomeExpense.keys.cast<int>().where((key) =>
-                            incomeExpense.get(key)!.createdDate==_startDate.add(Duration(days: i))).toList());
-                          }
-                          keys =range.reversed.toList();
-                        }
-                        else{
-                          return Text("No Transactions");
-                        }
-
-                        return ListView.separated(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: keys.length,
-                          itemBuilder: (context,index){
-                            //keys.sort()
-
-                            //final List<int>keysReversed = keys.reversed.toList();
-                             //List<DateTime> ?keysOfDate;
-                            final int key  = keys[index];
-                            final incomeExpenseValues= incomeExpense.get(key);
-                            return listTileCard(
-                              leading: DateFormat.MMMd().format(incomeExpenseValues!.createdDate),
-                              trailing: "${incomeExpenseValues.amount}",
-                              title: "${incomeExpenseValues.category}",
-                              trailingTextColor:incomeExpenseValues.isIncome==true? Colors.green:Colors.red,
-                              tileColor:
-                              Colors.white,
-                              onLongTap: (){
-                                showDialog(context: context,
-                                    builder: (context){
-                                      return AlertDialog(
-                                        title:Text(incomeExpenseValues.category),
-                                        content:  Text("${incomeExpenseValues.extraNotes}"),
-                                        actions: [
-                                          Text(DateFormat.MMMd().format(incomeExpenseValues.createdDate),),
-                                          Text( "${incomeExpenseValues.amount}",
-                                            style: TextStyle(
-                                              color: incomeExpenseValues.isIncome==true? Colors.green:Colors.red,),),
-                                        ],
-                                      );
-                                    }
-                                );
-                              },
-                              onTap: (){
-                                //Navigator.pushNamed(context, 'UpdateOrDeleteDetails');
-                                showDialog(context: context,
-                                    builder: (context){
-                                      return AlertDialog(
-                                        actions: [
-                                          ListTile(
-                                            tileColor:Colors.blue,
-                                            title: Text("Delete",
-                                              style: TextStyle(color: Colors.white),),
-
-                                            onTap:  (){
-                                              incomeExpenseBox.delete(key);
-                                              setState(() {
-                                                incomeSum();
-                                                expenseSum();
-                                              });
-                                              Navigator.pop(context);
-                                            },
-                                          )
-                                        ],
-                                      );
-                                    }
-                                );
-                              },
-                            );
-                          }, separatorBuilder: (BuildContext context, int index)
-                        {
-                          return    Divider(
-                            thickness: 1.5,
-                            color: Color(0xff0000FF),
-                          );
-                        },
-                        );
-                      },
+                ):divider(),
+                Container(
+                  margin: const EdgeInsets.only(top: 5),
+                  height: 40,
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Color(0xff005c99),
+                        width: 2,
+                        style: BorderStyle.solid
                     ),
+                    borderRadius: BorderRadius.all(Radius.circular(3))
+                  ),
+                  child: DropdownButton(
+                    underline: Text(""),
+                    style:   TextStyle(
+                        color: appbarBackgroundColor,
+                      fontFamily: "Outfit",
+                      fontWeight: FontWeight.w500,
+                      fontSize: 17,
+                    ),
+                    focusColor:Colors.white,
+                    hint: Text("Select Category"),
+                    items: items.map((itemsname) {
+                      return DropdownMenuItem(
+                        value: itemsname,
+                        child: Text(itemsname),
+                      );
+                    }).toList(),
+                    onChanged:(String ?newValue){
+                      setState(() {
+                        dropdownValue =newValue!;
+                        incomeSum();
+                        expenseSum();
+                      });
+                    },
+                    value: dropdownValue,
+                  ),
+                ),
+                divider(height: 15),
+              ],
+            ),
+            dropdownValue=="Monthly"?
+            Text(
+              selectedMonth,
+              style: TextStyle(fontFamily: "Outfit",fontWeight: FontWeight.w500,
+                  fontSize: 17),):
+                divider(),
+            dropdownValue=="Select Range" ?
+                Padding(
+                  padding: const EdgeInsets.only(top: 10,bottom: 10),
+                  child: dateRangeShow(
+                      initialDate: DateFormat('MMMMd').format(dateRange.start),
+                      finalDate: DateFormat('MMMMd').format(dateRange.end),
+                      onTap: (){
+                        pickDateRange(context);
+                      }
+                  ),
+                ):SizedBox(height: 1,),
+            divider(height: 5),
+            totalIncomeAndTotalExpenseShowingRow(totalIncomeText: "income\n",
+                totalIncome: sumInc.toString(),
+                totalExpenseText: "expense\n",
+                totalExpense: sumExp.toString()),
+           divider(height: 10),
 
-                    // itemBuilder: (context,_){
-                    //   return listTileCard(
-                    //     title: "Category",
-                    //     trailing: "amount",
-                    //     leading: "12-19-2020",
-                    //     onTap: (){
-                    //       Navigator.pushNamed(context, 'UpdateOrDeleteDetails');
-                    //     },
-                    //     trailingTextColor: Colors.red,
-                    //     tileColor:
-                    //     Colors.white,
-                    //   );
-                    // },
-                    // separatorBuilder: (context,int index){
-                    //   return Divider();
-                    // },
+           if (incomeExpenseBox.isNotEmpty) Expanded(
+             child: ValueListenableBuilder(
+               valueListenable: incomeExpenseBox.listenable(),
+               builder: (context, Box<IncomeExpenseModel> incomeExpense,_){
+                 List<int> keys;
+                 if(dropdownValue=="All"){
+                   List<int> keysUnsorted;
+                   keysUnsorted =incomeExpense.keys.cast<int>().where((key) =>
+                   incomeExpense.get(key)!.createdDate.year==todaysDateSelector().year).toList();
+                   List<DateTime> datesList=[];
+                   for(int i=0;i<keysUnsorted.length;i++){
+                     DateTime date = incomeExpense.get(keysUnsorted[i])!.createdDate;
+                     datesList.add(date);
+                   }
+                   datesList.sort();
+                   List<DateTime> reversedDateList = List.from(datesList.reversed);
+                   var duplicatesRemovedFromReversedDateList= reversedDateList.toSet().toList();
+                   reversedDateList =duplicatesRemovedFromReversedDateList.toList();
+                   List<int> sortedKeys=[];
+                   List<int> keyInorder;
+                   for(int j=0;j<reversedDateList.length;j++){
+                     keyInorder = incomeExpense.keys.cast<int>().where((key) =>
+                     incomeExpense.get(key)!.createdDate==reversedDateList[j]).toList();
+                     List<int> reversedList = List.from(keyInorder.reversed);
+                     sortedKeys.addAll(reversedList);
+                     print("------keyIn order $reversedList");
 
+                   }
+                   keys= sortedKeys.toList();
+                   print("----------$keys");
+                 }
+                 else if(dropdownValue=="Today") {
+                   keys = incomeExpense.keys.cast<int>().where((key) =>
+                   incomeExpense.get(key)!.createdDate==todaysDateSelector()).toList();
+                   var reversedKeys=keys.reversed;
+                   keys = reversedKeys.toList();
+                 }
+                 else if(dropdownValue=="Yesterday"){
+                   keys = incomeExpense.keys.cast<int>().where((key) =>
+                   incomeExpense.get(key)!.createdDate==yesterdaysDateSelector()).toList();
+                   var reversedKeys=keys.reversed;
+                   keys = reversedKeys.toList();
+                 }
+                 else if(dropdownValue=="Monthly"){
+                   List<int> unsortedKeysForOneMonth;
+                   unsortedKeysForOneMonth = incomeExpense.keys.cast<int>().where((key) =>
+                   (incomeExpense.get(key)!.createdDate.month==monthlyDateSelector().month)&&
+                       (incomeExpense.get(key)!.createdDate.year==monthlyDateSelector().year)).toList();
+                   selectedMonth =DateFormat('MMMM').format(monthlyDateSelector());
+                   List<DateTime> monthlyDatesList=[];
+                   for(int i=0;i<unsortedKeysForOneMonth.length;i++){
+                     DateTime date = incomeExpense.get(unsortedKeysForOneMonth[i])!.createdDate;
+                     monthlyDatesList.add(date);
+                   }
+                   monthlyDatesList.sort();
+                   var duplicateDatesRemoved = monthlyDatesList.reversed.toSet().toList();
+                   monthlyDatesList = duplicateDatesRemoved.toList();
+                   Iterable<int> monthelyKeysInorder;
+                   List<int> sortedMothlyKeys=[];
+                   for(int j=0;j<monthlyDatesList.length;j++){
+                     monthelyKeysInorder = incomeExpense.keys.cast<int>().where((key) =>
+                     incomeExpense.get(key)!.createdDate==monthlyDatesList[j]);
+                     sortedMothlyKeys.addAll(monthelyKeysInorder);
 
-          ) else Center(child: Text("No Transactions")),
-        ],
+                   }
+                   keys =sortedMothlyKeys.toList();
+                   //print("selectedMonth:----------$selectedMonth");
+
+                 }
+                 else if(dropdownValue=="Select Range"){
+                   List <int> range=[];
+                   _startDate=dateRange.start;
+                   _endDate =dateRange.end;
+                   int difference = _endDate.difference(_startDate).inDays;
+                   for(int i =0;i<=difference; i++){
+                     range.addAll(incomeExpense.keys.cast<int>().where((key) =>
+                     incomeExpense.get(key)!.createdDate==_startDate.add(Duration(days: i))).toList());
+                   }
+                   keys =range.reversed.toList();
+                 }
+                 else{
+                   return Text("No Transactions");
+                 }
+                 //---------------------------------------------------++++++++++++++++++++------------------------------
+                 return
+                   GridView.count(crossAxisCount: 2,
+                     scrollDirection: Axis.vertical,
+                     crossAxisSpacing: 10,
+                     mainAxisSpacing: 10,
+                     shrinkWrap: true,
+                     childAspectRatio: (2/1.1 ),
+                     children: List.generate(keys.length, (index){
+                       final int key  = keys[index];
+                       final incomeExpenseValues= incomeExpense.get(key);
+                       return GestureDetector(
+                         child: Container(
+                           decoration: BoxDecoration(
+                               // gradient: LinearGradient(
+                               //     colors:
+                               //     [appbarBackgroundColor,color2],
+                               //   begin: Alignment.topCenter,
+                               //   end: Alignment.bottomCenter,
+                               //   stops: [.3,1]
+                               // ),
+                             color: appbarBackgroundColor,
+                               borderRadius: BorderRadius.circular(10),
+                               border: Border.all(color: appbarBackgroundColor,width: 3)
+                           ),
+                           padding: const EdgeInsets.only(left: 15,top: 10,bottom: 5),
+                           child: RichText(
+                             text: TextSpan(
+                               children: <TextSpan>[
+                                 TextSpan(
+                                   text:"${DateFormat.MMMd().format(incomeExpenseValues!.createdDate)}\n",
+                                 style: TextStyle(fontFamily: "Outfit",fontSize: 15,
+                                     fontWeight: FontWeight.w400,
+                                     color: incomeExpenseValues.isIncome==true? color2:Color(0xffcce6ff),
+                                 )
+                             ),
+                         TextSpan(
+                         text:"  ${incomeExpenseValues.category}\n",
+                         style: TextStyle(fontFamily: "Outfit",fontSize: 20,
+                             fontWeight: FontWeight.w500,
+                             color: incomeExpenseValues.isIncome==true? color2:Color(0xffcce6ff),
+                         )
+                         ),
+                                 TextSpan(
+                                     text:"  ${incomeExpenseValues.amount}",
+                                     style: TextStyle(fontFamily: "Outfit",fontSize: 24,
+                                         fontWeight: FontWeight.w500,
+                                         color: incomeExpenseValues.isIncome==true? color2:Color(0xffcce6ff),
+                                     )
+                                 )]
+                           )
+                         )),
+                         onLongPress:  (){
+                           showDialog(context: context,
+                               builder: (context){
+                                 return AlertDialog(
+                                   title:Text(incomeExpenseValues.category),
+                                   content:  Text("${incomeExpenseValues.extraNotes}"),
+                                   actions: [
+                                     Text(DateFormat.MMMd().format(incomeExpenseValues.createdDate),),
+                                     Text( "${incomeExpenseValues.amount}",
+                                       style: TextStyle(
+                                         color: incomeExpenseValues.isIncome==true? Colors.green:Colors.red,),),
+                                   ],
+                                 );
+                               }
+                           );
+                         },
+                         onTap:  (){
+                           //Navigator.pushNamed(context, 'UpdateOrDeleteDetails');
+                           showDialog(context: context,
+                               builder: (context){
+                                 return AlertDialog(
+                                   actions: [
+                                     ListTile(
+                                       tileColor:Colors.blue,
+                                       title: Text("Delete",
+                                         style: TextStyle(color: Colors.white),),
+
+                                       onTap:  (){
+                                         incomeExpenseBox.delete(key);
+                                         setState(() {
+                                           incomeSum();
+                                           expenseSum();
+                                         });
+                                         Navigator.pop(context);
+                                       },
+                                     )
+                                   ],
+                                 );
+                               }
+                           );
+                         },
+                       );
+                     }),);
+                 //---------------------------------------------------++++++++++++++++++++------------------------------
+                 //   ListView.separated(
+                 //   scrollDirection: Axis.vertical,
+                 //   shrinkWrap: true,
+                 //   itemCount: keys.length,
+                 //   itemBuilder: (context,index){
+                 //     final int key  = keys[index];
+                 //     final incomeExpenseValues= incomeExpense.get(key);
+                 //     return listTileCard(
+                 //       elevation: 5,
+                 //       leading: DateFormat.MMMd().format(incomeExpenseValues!.createdDate),
+                 //       trailing: "${incomeExpenseValues.amount}",
+                 //       title: "${incomeExpenseValues.category}",
+                 //       trailingTextColor:incomeExpenseValues.isIncome==true? Colors.white:Colors.black,
+                 //       leadingTextColor:incomeExpenseValues.isIncome==true? Colors.white:Colors.black,
+                 //       titleTextColor: incomeExpenseValues.isIncome==true? Colors.white:Colors.black,
+                 //       tileColor:appbarBackgroundColor,
+                 //       //incomeExpenseValues.isIncome==true? appbarBackgroundColor:color2,
+                 //       onLongTap: (){
+                 //         showDialog(context: context,
+                 //             builder: (context){
+                 //               return AlertDialog(
+                 //                 title:Text(incomeExpenseValues.category),
+                 //                 content:  Text("${incomeExpenseValues.extraNotes}"),
+                 //                 actions: [
+                 //                   Text(DateFormat.MMMd().format(incomeExpenseValues.createdDate),),
+                 //                   Text( "${incomeExpenseValues.amount}",
+                 //                     style: TextStyle(
+                 //                       color: incomeExpenseValues.isIncome==true? Colors.green:Colors.red,),),
+                 //                 ],
+                 //               );
+                 //             }
+                 //         );
+                 //       },
+                 //       onTap: (){
+                 //         //Navigator.pushNamed(context, 'UpdateOrDeleteDetails');
+                 //         showDialog(context: context,
+                 //             builder: (context){
+                 //               return AlertDialog(
+                 //                 actions: [
+                 //                   ListTile(
+                 //                     tileColor:Colors.blue,
+                 //                     title: Text("Delete",
+                 //                       style: TextStyle(color: Colors.white),),
+                 //
+                 //                     onTap:  (){
+                 //                       incomeExpenseBox.delete(key);
+                 //                       setState(() {
+                 //                         incomeSum();
+                 //                         expenseSum();
+                 //                       });
+                 //                       Navigator.pop(context);
+                 //                     },
+                 //                   )
+                 //                 ],
+                 //               );
+                 //             }
+                 //         );
+                 //       },
+                 //     );
+                 //   }, separatorBuilder: (BuildContext context, int index)
+                 // {
+                 //   return    SizedBox(height: 2,);
+                 // },
+                 // );
+                 //====================================================================================================
+               },
+             ),
+           ) else Center(child: Text("No Transactions")),
+          ],
+        ),
+
       ),
-
     );
   }
 }

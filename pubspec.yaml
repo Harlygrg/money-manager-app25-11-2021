@@ -103,6 +103,16 @@ flutter:
     - family: Outfit
       fonts:
         - asset: AssetFonts/Outfit-VariableFont_wght.ttf
+    - family: Outfit
+      fonts:
+        - asset: AssetFonts/Outfit-Bold.ttf
+    - family: Outfit
+      fonts:
+        - asset: AssetFonts/Outfit-Medium.ttf
+    - family: Outfit
+      fonts:
+        - asset: AssetFonts/Outfit-Light.ttf
+
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf

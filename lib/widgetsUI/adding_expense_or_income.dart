@@ -45,6 +45,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffe6f0ff),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text("Money Manager"),
@@ -78,14 +79,14 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                   Text(
                     "Income",
                     style: TextStyle(
-                        fontSize: 17,
-                        fontFamily: "ArchitectsDaughter",
-                        fontWeight: FontWeight.bold),
+                        fontSize: 20,
+                        fontFamily: "Outfit",
+                        fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
             ),
-            SizedBox(width:  130,
+            SizedBox(width:  135,
               child: Row(
                 children: [
                   Radio(
@@ -103,9 +104,9 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                   Text(
                     "Expense ",
                     style: TextStyle(
-                        fontSize: 17,
-                        fontFamily: "ArchitectsDaughter",
-                        fontWeight: FontWeight.bold
+                        fontSize: 20,
+                        fontFamily: "Outfit",
+                        fontWeight: FontWeight.w500
                     ),),
                 ],
               ),

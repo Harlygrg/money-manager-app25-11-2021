@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       style:TextStyle(
         fontSize: 15,
         fontFamily: "Outfit",
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w500,
       ),
 
     );
@@ -47,11 +47,22 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffe6f0ff),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Color(0xff005c99),
-        title: Text("Money Manager"),
+        backgroundColor:
+        Color(0xff005c99),
+        //Color(0xff0000ff),
+        title: Text("Money Manager",style: TextStyle(
+            shadows:const [
+            Shadow(
+              color: Colors.black,
+              blurRadius: 4,
+              offset: Offset(3,2.5),
+            )],
+          fontFamily: "Outfit"
+        ),),
         actions: [
           appBarRightSideIconButton(
             onPressed: (){
@@ -97,15 +108,42 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         ],
       ),
 
-      floatingActionButton: floatingActoinButton(
-
-          actions: (){
-            Navigator.pushNamed(context, "AddIncomeOrExpense");
-          }
-      )
+      floatingActionButton:Material(
+          type: MaterialType.transparency, //Makes it usable on any background color, thanks @IanSmith
+          child: Ink(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white70, width: 4.0),
+              color: appbarBackgroundColor,
+              shape: BoxShape.circle,
+            ),
+            child: InkWell(
+              //This keeps the splash effect within the circle
+              borderRadius: BorderRadius.circular(1000.0), //Something large to ensure a circle
+              onTap: (){
+                Navigator.pushNamed(context, "AddIncomeOrExpense");
+              },
+              child: Padding(
+                padding:EdgeInsets.all(15.0),
+                child: Icon(
+                  Icons.add,
+                  size: 30.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          )
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
+
+// floatingActoinButton(
+//
+// actions: (){
+// Navigator.pushNamed(context, "AddIncomeOrExpense");
+// }
+// )
 // listTileCard(
 // leading: "Notifications",
 // // onTap: (){
