@@ -17,6 +17,7 @@ class Piechart extends StatefulWidget {
 
 class _PiechartState extends State<Piechart> {
   static DateTime now = DateTime.now();
+  bool incomePichartSelect=true;
   int incrementCounter =0;
   String selectedMonth=DateFormat('MMMM').format(now);
   DateTimeRange dateRange = DateTimeRange(
@@ -139,7 +140,10 @@ class _PiechartState extends State<Piechart> {
 
         }
       }
-      datasForPieChart[incCatList[j]]=sum;
+      if(sum>0){
+        datasForPieChart[incCatList[j]]=sum;
+      }
+
     }
     print("Incme category sum: $datasForPieChart");
 
@@ -149,18 +153,11 @@ class _PiechartState extends State<Piechart> {
   }
 
   List<Color> colorList=[
-    Colors.green,
-    Colors.blue,
-    Colors.red,
-    Colors.purple,
-    Colors.yellow,
-    Colors.blueAccent,
-    Colors.amberAccent,
-    Colors.teal,
-    Colors.deepPurpleAccent,
-    Colors.pinkAccent,
-    Colors.deepOrangeAccent,
-    Colors.lime,];
+    Color(0xff003f5c),
+    Color(0xff58508d),
+    Color(0xffbc5090),
+    Color(0xffff6361),
+    Color(0xffffa600),];
   @override
   void initState() {
     // TODO: implement initState
@@ -179,54 +176,86 @@ class _PiechartState extends State<Piechart> {
       body: Padding(
         padding: const EdgeInsets.only(left: 10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: pichartTitles(text: "INCOME"),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  height: 40,
-                  padding: const EdgeInsets.only(left: 10,right: 3),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Color(0xff005c99),
-                          width: 2,
-                          style: BorderStyle.solid
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(3))
-                  ),
-                  child: DropdownButton(
-                    underline: Text(""),
-                    style:  const TextStyle(
-                      color: Colors.blue,
-                      fontFamily: "BalsamiqSans",
-                      fontSize: 17,
+            divider(height: 15),
+            SizedBox(
+              width: 180,
+              child: Row(
+                  children:[
+                    elevatedButton(
+                        borderRadius: 0,
+                        buttonName: "INCOME",
+                        buttonBackground: incomePichartSelect?appbarBackgroundColor:Colors.white,
+                        textColor: !incomePichartSelect?appbarBackgroundColor:Colors.white,
+                        onPressed: (){
+                          //incomeTrue =true;
+                          setState(() {
+                            incomePichartSelect=true;
+                          });
+                        }
+                    ),elevatedButton(
+                        borderRadius: 0,
+                        buttonName: "Expense",
+                        buttonBackground: !incomePichartSelect?appbarBackgroundColor:Colors.white,
+                        textColor: incomePichartSelect?appbarBackgroundColor:Colors.white,
+                        onPressed: (){
+                          //incomeTrue =true;
+                          setState(() {
+                            incomePichartSelect=false;
+                          });
+                        }
                     ),
-                    focusColor:Colors.white,
-                    hint: Text("Select Category"),
-                    items: items.map((itemsname) {
-                      return DropdownMenuItem(
-                        value: itemsname,
-                        child: Text(itemsname),
-                      );
-                    }).toList(),
-                    onChanged:(String ?newValue){
-                      setState(() {
-                        dropdownValues =newValue!;
-                        incomeCategories(isIncome: true);
-                        incomeCategories(isIncome: false);
-                      });
-                    },
-                    value: dropdownValues,
-                  ),
-                ),
 
-              ],
+                  ]
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    height: 40,
+                    padding: const EdgeInsets.only(left: 10,right: 3),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color(0xff005c99),
+                            width: 2,
+                            style: BorderStyle.solid
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(3))
+                    ),
+                    child: DropdownButton(
+                      underline: Text(""),
+                      style:  const TextStyle(
+                        color: Colors.blue,
+                        fontFamily: "BalsamiqSans",
+                        fontSize: 17,
+                      ),
+                      focusColor:Colors.white,
+                      hint: Text("Select Category"),
+                      items: items.map((itemsname) {
+                        return DropdownMenuItem(
+                          value: itemsname,
+                          child: Text(itemsname),
+                        );
+                      }).toList(),
+                      onChanged:(String ?newValue){
+                        setState(() {
+                          dropdownValues =newValue!;
+                          incomeCategories(isIncome: true);
+                          incomeCategories(isIncome: false);
+                        });
+                      },
+                      value: dropdownValues,
+                    ),
+                  ),
+
+                ],
+              ),
             ),
             dropdownValues=="Monthly"?
             Container(
@@ -281,23 +310,34 @@ class _PiechartState extends State<Piechart> {
                   }
               ),
             ):SizedBox(height: 1,),
-            divider(height: 35),
-          incomeCategories(isIncome: true).isNotEmpty ?
-            piechart(
-                piechartDatas: incomeCategories(isIncome: true),
-                colorList: colorList
-            ):Center(child: Text("No transactions yet")),
-            divider(height: 35),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: pichartTitles(text: "EXPENSE"),
-            ),
+            //divider(height: 35),
+            //---------------------------
+          // incomeCategories(isIncome: true).isNotEmpty && incomePichartSelect?
+          //   piechart(
+          //       piechartDatas: incomeCategories(isIncome: true),
+          //       colorList: colorList
+          //   ):divider(),
+          //---------------------------------------
+          //Center(child: Text("No transactions yet")),
+            //divider(height: 35),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 10),
+            //   child: pichartTitles(text: "EXPENSE"),
+            // ),
             divider(height: 37),
-           incomeCategories(isIncome: false).isNotEmpty ?
-                       piechart(
-              piechartDatas: incomeCategories(isIncome: false),
-              colorList: colorList,
-            ):Center(child: Text("No transactions yet")),
+            (incomeCategories(isIncome: true).isNotEmpty && incomePichartSelect)
+                || (incomeCategories(isIncome: false).isNotEmpty && !incomePichartSelect)?
+                      Expanded(child:
+                      ListView(
+                        children: [divider(height: 50),
+                          piechart(
+                            piechartDatas:incomeCategories(isIncome: false).isNotEmpty && !incomePichartSelect?
+                            incomeCategories(isIncome: false):incomeCategories(isIncome: true),
+                            colorList: colorList,
+                          ),
+                        ],
+                      )):Text("No transcactions"),
+           //Center(child: Text("No transactions yet")),
           ],
         ),
       ),
@@ -310,18 +350,18 @@ class _PiechartState extends State<Piechart> {
     return PieChart(
       dataMap: piechartDatas,
       animationDuration: Duration(milliseconds: 1500),
-      chartLegendSpacing: 40,
-      chartRadius: MediaQuery.of(context).size.width*.4,
+      chartLegendSpacing: 50,
+      chartRadius: MediaQuery.of(context).size.width*.6,
       colorList: colorList,
       initialAngleInDegree: 0,
       chartType: ChartType.ring,
-      ringStrokeWidth: 70,
+      ringStrokeWidth: 80,
       legendOptions: LegendOptions(
         showLegendsInRow: false,
-        legendPosition: LegendPosition.right,
+        legendPosition: LegendPosition.bottom,
         showLegends: true,
         legendShape:
-        BoxShape.circle, legendTextStyle: TextStyle(
+        BoxShape.rectangle, legendTextStyle: TextStyle(
         fontWeight: FontWeight.bold,
       ),
       ),

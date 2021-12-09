@@ -102,81 +102,104 @@ class _CategoriesState extends State<Categories> {
                   itemBuilder: (context,index){
                     final int key  = keys[index];
                     final categoryValues= categories.get(key);
-                    return listTileCard(
-                        leading:categoryValues!.category.toString(),
-                        trailingTextColor: Colors.black,
-                        tileColor: color2,
-                        elevation: 5,
-                        leadingFontSize: 20,
+                    return 
+                        Card(
+                          elevation: 5,
+                          child: GestureDetector(
+                            child: Container(
+                              padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
+                              width: 250,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                gradient:  LinearGradient(
+                                    colors: index%2==0 ?
+                                    [appbarBackgroundColor,color2]:[color2,appbarBackgroundColor,]
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text(categoryValues!.category.toString(),
+                              style:const TextStyle(fontSize: 20,fontFamily: "Outfit",
+                                  fontWeight: FontWeight.w500,color: Colors.white)),
+                            ),
+                            onTap: (){
+                              showDialog(context: context,
+                                  builder: (context){
+                                    return AlertDialog(
+                                        content: Container(
+                                          width: 70,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // textButton(
+                                              //   text: "Edit",
+                                              //   onPressed: (){
+                                              //     Navigator.pop(context);
+                                              //     showDialog(context: context,
+                                              //         builder: (context){
+                                              //           return AlertDialog(
+                                              //               content: Container(
+                                              //                 width: 100,
+                                              //                 child: Column(
+                                              //                   mainAxisSize: MainAxisSize.min,
+                                              //                   children: [
+                                              //                     TextFormField(
+                                              //                       initialValue: categoryValues.category.toString(),
+                                              //                       controller:updateCategoryController,
+                                              //                       key: formKey,
+                                              //                       decoration: InputDecoration(
+                                              //                           hintText: "Category Name",
+                                              //                       ),
+                                              //                     ),
+                                              //                     divider(height: 5),
+                                              //                     elevatedButton(
+                                              //                         buttonBackground: Color(0xff005c99),
+                                              //                         buttonName: "Update Category",
+                                              //                         onPressed: (){
+                                              //                           //categories.put(widget.key,);
+                                              //                           print("========================UPdated");
+                                              //                           Navigator.pop(context);
+                                              //                         })
+                                              //                   ],
+                                              //                 ),
+                                              //               )
+                                              //           );
+                                              //         }
+                                              //     );
+                                              //   },
+                                              //
+                                              // ),
+                                              textButton(
+                                                text: " Delete",
+                                                onPressed: (){
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                      SnackBar(
+                                                        content:Text('Do you want to delete'),
+                                                        backgroundColor: appbarBackgroundColor,
+                                                        action: SnackBarAction(
+                                                          textColor: color2,
+                                                            label:"yes",
+                                                            onPressed: (){
+                                                              categoryBox.delete(key);
+                                                            }
+                                                        ),
+                                                      ));
+                                                  Navigator.pop(context);
+                                                  print("Item Deleted");
+                                                },
+
+                                              ),
 
 
-                        onTap: (){
-                          showDialog(context: context,
-                              builder: (context){
-                                return AlertDialog(
-                                    content: Container(
-                                      width: 70,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          // textButton(
-                                          //   text: "Edit",
-                                          //   onPressed: (){
-                                          //     Navigator.pop(context);
-                                          //     showDialog(context: context,
-                                          //         builder: (context){
-                                          //           return AlertDialog(
-                                          //               content: Container(
-                                          //                 width: 100,
-                                          //                 child: Column(
-                                          //                   mainAxisSize: MainAxisSize.min,
-                                          //                   children: [
-                                          //                     TextFormField(
-                                          //                       initialValue: categoryValues.category.toString(),
-                                          //                       controller:updateCategoryController,
-                                          //                       key: formKey,
-                                          //                       decoration: InputDecoration(
-                                          //                           hintText: "Category Name",
-                                          //                       ),
-                                          //                     ),
-                                          //                     divider(height: 5),
-                                          //                     elevatedButton(
-                                          //                         buttonBackground: Color(0xff005c99),
-                                          //                         buttonName: "Update Category",
-                                          //                         onPressed: (){
-                                          //                           //categories.put(widget.key,);
-                                          //                           print("========================UPdated");
-                                          //                           Navigator.pop(context);
-                                          //                         })
-                                          //                   ],
-                                          //                 ),
-                                          //               )
-                                          //           );
-                                          //         }
-                                          //     );
-                                          //   },
-                                          //
-                                          // ),
-                                          textButton(
-                                            text: " Delete",
-                                            onPressed: (){
-                                              categoryBox.delete(key);
-                                              Navigator.pop(context);
-                                              print("Item Deleted");
-                                            },
-
+                                            ],
                                           ),
-
-
-                                        ],
-                                      ),
-                                    )
-                                );
-                              }
-                          );
-                        }
-                    );
+                                        )
+                                    );
+                                  }
+                              );
+                            },
+                          ),
+                        );
                   }, separatorBuilder: (BuildContext context, int index)
                 {
                   return    divider();

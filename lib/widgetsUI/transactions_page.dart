@@ -296,39 +296,45 @@ DateTime _startDate =now;
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      timePeriodeChageIcon(
-                          onPressed: (){
-                            if(dropdownValue=="Monthly"){
-                              setState(() {
-                                if(incrementCounter<11){
-                                  incrementCounter=incrementCounter+1;
-                                }
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: timePeriodeChageIcon(
+                            onPressed: (){
+                              if(dropdownValue=="Monthly"){
+                                setState(() {
+                                  if(incrementCounter<11){
+                                    incrementCounter=incrementCounter+1;
+                                  }
 
-                                  selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
-                                  incomeSum();
-                                  expenseSum();
+                                    selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
+                                    incomeSum();
+                                    expenseSum();
 
-                              });
-                            }
-                          },
-                          icon: const Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,)
+                                });
+                              }
+                            },
+                            icon: const Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,)
+                        ),
                       ),
-                      timePeriodeChageIcon(
-                          onPressed: (){
-                            if(dropdownValue=="Monthly"){
-                              setState(() {
-                                if(incrementCounter>0) {
-                                  incrementCounter = incrementCounter - 1;
-                                  selectedMonth = DateFormat('MMMM').format(
-                                      monthlyDateSelector());
-                                  incomeSum();
-                                  expenseSum();
-                                }
-                              });
-                            }
-                          },
-                          icon: const Icon(Icons.arrow_forward_ios,size: 25,color: Colors.white,)
-                          //arrow_back_ios
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: timePeriodeChageIcon(
+                            onPressed: (){
+                              if(dropdownValue=="Monthly"){
+                                setState(() {
+                                  if(incrementCounter>0) {
+                                    incrementCounter = incrementCounter - 1;
+                                    selectedMonth = DateFormat('MMMM').format(
+                                        monthlyDateSelector());
+                                    incomeSum();
+                                    expenseSum();
+                                  }
+                                });
+                              }
+                            },
+                            icon: const Icon(Icons.arrow_forward_ios,size: 25,color: Colors.white,)
+                            //arrow_back_ios
+                        ),
                       )
                     ],
                   ),
@@ -396,7 +402,7 @@ DateTime _startDate =now;
                 totalIncome: sumInc.toString(),
                 totalExpenseText: "expense\n",
                 totalExpense: sumExp.toString()),
-           divider(height: 10),
+           divider(height: 15),
 
            if (incomeExpenseBox.isNotEmpty) Expanded(
              child: ValueListenableBuilder(
@@ -482,7 +488,10 @@ DateTime _startDate =now;
                    return Text("No Transactions");
                  }
                  //---------------------------------------------------++++++++++++++++++++------------------------------
-                 return
+                 return keys.length==0? Center(
+                   child:Text("No Trasactions saved",
+                     style: TextStyle(fontSize: 18,fontFamily: "Outfit",fontWeight: FontWeight.w500),)
+                 ):
                    GridView.count(crossAxisCount: 2,
                      scrollDirection: Axis.vertical,
                      crossAxisSpacing: 10,
@@ -514,21 +523,21 @@ DateTime _startDate =now;
                                    text:"${DateFormat.MMMd().format(incomeExpenseValues!.createdDate)}\n",
                                  style: TextStyle(fontFamily: "Outfit",fontSize: 15,
                                      fontWeight: FontWeight.w400,
-                                     color: incomeExpenseValues.isIncome==true? color2:Color(0xffcce6ff),
+                                     color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): color2,
                                  )
                              ),
                          TextSpan(
                          text:"  ${incomeExpenseValues.category}\n",
                          style: TextStyle(fontFamily: "Outfit",fontSize: 20,
                              fontWeight: FontWeight.w500,
-                             color: incomeExpenseValues.isIncome==true? color2:Color(0xffcce6ff),
+                             color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): color2,
                          )
                          ),
                                  TextSpan(
                                      text:"  ${incomeExpenseValues.amount}",
                                      style: TextStyle(fontFamily: "Outfit",fontSize: 24,
                                          fontWeight: FontWeight.w500,
-                                         color: incomeExpenseValues.isIncome==true? color2:Color(0xffcce6ff),
+                                         color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): color2,
                                      )
                                  )]
                            )
@@ -556,92 +565,39 @@ DateTime _startDate =now;
                                  return AlertDialog(
                                    actions: [
                                      ListTile(
-                                       tileColor:Colors.blue,
                                        title: Text("Delete",
-                                         style: TextStyle(color: Colors.white),),
+                                         style: TextStyle(color: Colors.black),),
 
                                        onTap:  (){
-                                         incomeExpenseBox.delete(key);
-                                         setState(() {
-                                           incomeSum();
-                                           expenseSum();
-                                         });
+                                         ScaffoldMessenger.of(context).showSnackBar(
+                                             SnackBar(
+                                               content:Text('Are you sure?'),
+                                               behavior: SnackBarBehavior.floating,
+                                               elevation: 6.0,
+                                               action: SnackBarAction(
+                                                 textColor: appbarBackgroundColor,
+                                                   label: "yes",
+                                                   onPressed:(){
+                                                     incomeExpenseBox.delete(key);
+                                                     setState(() {
+                                                       incomeSum();
+                                                       expenseSum();
+                                                     });
+                                                   }),
+                                               backgroundColor: color2,
+                                             )
+                                         );
                                          Navigator.pop(context);
                                        },
                                      )
                                    ],
+
                                  );
                                }
                            );
                          },
                        );
                      }),);
-                 //---------------------------------------------------++++++++++++++++++++------------------------------
-                 //   ListView.separated(
-                 //   scrollDirection: Axis.vertical,
-                 //   shrinkWrap: true,
-                 //   itemCount: keys.length,
-                 //   itemBuilder: (context,index){
-                 //     final int key  = keys[index];
-                 //     final incomeExpenseValues= incomeExpense.get(key);
-                 //     return listTileCard(
-                 //       elevation: 5,
-                 //       leading: DateFormat.MMMd().format(incomeExpenseValues!.createdDate),
-                 //       trailing: "${incomeExpenseValues.amount}",
-                 //       title: "${incomeExpenseValues.category}",
-                 //       trailingTextColor:incomeExpenseValues.isIncome==true? Colors.white:Colors.black,
-                 //       leadingTextColor:incomeExpenseValues.isIncome==true? Colors.white:Colors.black,
-                 //       titleTextColor: incomeExpenseValues.isIncome==true? Colors.white:Colors.black,
-                 //       tileColor:appbarBackgroundColor,
-                 //       //incomeExpenseValues.isIncome==true? appbarBackgroundColor:color2,
-                 //       onLongTap: (){
-                 //         showDialog(context: context,
-                 //             builder: (context){
-                 //               return AlertDialog(
-                 //                 title:Text(incomeExpenseValues.category),
-                 //                 content:  Text("${incomeExpenseValues.extraNotes}"),
-                 //                 actions: [
-                 //                   Text(DateFormat.MMMd().format(incomeExpenseValues.createdDate),),
-                 //                   Text( "${incomeExpenseValues.amount}",
-                 //                     style: TextStyle(
-                 //                       color: incomeExpenseValues.isIncome==true? Colors.green:Colors.red,),),
-                 //                 ],
-                 //               );
-                 //             }
-                 //         );
-                 //       },
-                 //       onTap: (){
-                 //         //Navigator.pushNamed(context, 'UpdateOrDeleteDetails');
-                 //         showDialog(context: context,
-                 //             builder: (context){
-                 //               return AlertDialog(
-                 //                 actions: [
-                 //                   ListTile(
-                 //                     tileColor:Colors.blue,
-                 //                     title: Text("Delete",
-                 //                       style: TextStyle(color: Colors.white),),
-                 //
-                 //                     onTap:  (){
-                 //                       incomeExpenseBox.delete(key);
-                 //                       setState(() {
-                 //                         incomeSum();
-                 //                         expenseSum();
-                 //                       });
-                 //                       Navigator.pop(context);
-                 //                     },
-                 //                   )
-                 //                 ],
-                 //               );
-                 //             }
-                 //         );
-                 //       },
-                 //     );
-                 //   }, separatorBuilder: (BuildContext context, int index)
-                 // {
-                 //   return    SizedBox(height: 2,);
-                 // },
-                 // );
-                 //====================================================================================================
                },
              ),
            ) else Center(child: Text("No Transactions")),

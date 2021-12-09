@@ -218,7 +218,7 @@ void initState() {
             ),
           ),
 //--------------------------------------------------------------------------------------------------------------------
-          divider(height: 10),
+          divider(height: 20),
           Expanded(
             child: ValueListenableBuilder(
 

@@ -185,7 +185,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                                 return ListView.separated(
                                   scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
+                                 // physics: NeverScrollableScrollPhysics(),
                                   itemCount: keys.length,
                                   itemBuilder: (context,index){
                                     final int key  = keys[index];
@@ -193,7 +193,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                                     return GestureDetector(
                                         child: Text(categoryValues!.category.toString(),
                                           style: TextStyle(
-                                              fontSize: 17,fontFamily: "Roboto",fontWeight: FontWeight.w200
+                                              fontSize: 17,fontFamily: "Roboto",fontWeight: FontWeight.w500
                                           ),),
                                         onTap: (){
                                           categoryValue =categoryBox.get(key)!.category!;
@@ -427,6 +427,20 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                   }
                 ),
           ),
+          divider(height: 50),
+          Center(
+            child: OutlinedButton(
+              onPressed: (){
+                Navigator.pop(context);
+              },
+              style: OutlinedButton.styleFrom(
+                  primary: Colors.white,
+                  backgroundColor: Colors.blueGrey
+              ),
+              child: Text("back",style:
+              TextStyle(color: appbarBackgroundColor,fontSize: 18,fontFamily: "Outfit"),),
+            ),
+          )
         ],
       ),
     );

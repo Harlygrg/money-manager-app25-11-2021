@@ -9,7 +9,6 @@ import 'package:money_manager_app/widgetsUI/categories_page.dart';
 import 'package:money_manager_app/actions/notification_api.dart';
 import 'package:money_manager_app/widgetsUI/adding_expense_or_income.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
   @override
@@ -47,7 +46,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffe6f0ff),
+      //backgroundColor: Color(0xffe6f0ff),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -95,7 +94,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           ],
           indicatorColor: Colors.white,
         ),
-
       ),
       body: TabBarView(
 

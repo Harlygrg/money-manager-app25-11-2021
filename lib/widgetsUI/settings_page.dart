@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
@@ -67,9 +68,9 @@ class _SettingState extends State<Setting> {
                   child: ListTile(
                     leading: Text("Notification",
                       style:TextStyle(fontSize: 18,
-                          fontFamily:  "Outfit",
-                      fontWeight: FontWeight.w900) ,),
-                    tileColor: Colors.orangeAccent,
+                          fontFamily:  "Outfit",color: Colors.white,
+                      fontWeight: FontWeight.w500) ,),
+                    tileColor: appbarBackgroundColor,
                     title: TextButton(
                         onPressed: (){
                           selectTime(context);
@@ -79,20 +80,17 @@ class _SettingState extends State<Setting> {
                         },
                       child:
                         Text(_selectedTime,
-                          style: TextStyle(color: Color(0xff005c99),fontSize: 18,
+                          style: TextStyle(color: color2,fontSize: 18,
                               fontFamily:  "Outfit",
-                              fontWeight: FontWeight.w900),),
+                              fontWeight: FontWeight.w500),),
                     ) ,
                     trailing:Switch(
                       value: isSwitched,
                       onChanged: (bool value) {
-                        print("------------#####  $_selectedTime");
                         saveSettingsPageDataToStorage(context);
                         //getSavedDataSettingsPage(context);
                         setState(() {
                           isSwitched =value;
-
-                          print("%%%%%% hour default: $hr, min defalult : $mn");
                           if(isSwitched){
                             NotificationApi.showScheduledNotification(
                                 scheduledTime: Time(hr,mn),
@@ -106,8 +104,6 @@ class _SettingState extends State<Setting> {
                           }
                         });
 
-
-
                       },
                       activeTrackColor: Colors.white,
                       activeColor: Colors.blue,
@@ -117,26 +113,31 @@ class _SettingState extends State<Setting> {
                 divider(height: 10),
                 listTileCard(
                     leading: "Privacy Policy",leadingFontSize: 18,
+                    leadingTextColor: Colors.white,
                     onTap: (){},
-                    tileColor: Colors.orangeAccent
+                    tileColor: appbarBackgroundColor,
                 ),
                 divider(height: 10),
                 listTileCard(
                     leading: "Terms and Conditions",leadingFontSize: 18,
+                    leadingTextColor: Colors.white,
                     onTap: (){
                     },
-                    tileColor: Colors.orangeAccent
+                    tileColor: appbarBackgroundColor,
                 ),
                 divider(height: 10),
                 listTileCard(
                     leading: "About",leadingFontSize: 18,
+                    leadingTextColor: Colors.white,
                     onTap: (){
                       showAboutDialog(context: context,
                         applicationName: "Money Manager",
+                        applicationIcon: SizedBox(width: 50,height: 50,
+                            child: Image.asset("ImageAssets/money_manager_icon.png"))
 
                       );
                     },
-                    tileColor: Colors.orangeAccent
+                    tileColor: appbarBackgroundColor,
                 ),
 
               ],
@@ -151,30 +152,27 @@ class _SettingState extends State<Setting> {
     await sharedPreferences.setBool("notification", isSwitched);
     await sharedPreferences.setInt('hour',hr );
     await sharedPreferences.setInt('minute',mn );
-    print("$isSwitched ===is saved to database -----");
-    print("$hr:hour ===is saved to database -----");
-    print("$mn:minute ===is saved to database -----");
   }
 
   Future<void>getSavedDataSettingsPage(BuildContext context,)async{
     final savedValue = sharedPreferences.getBool("notification");
     final savedHour = sharedPreferences.getInt("hour");
     final savedMinute = sharedPreferences.getInt("minute");
-    print("$savedValue got from database ----------------");
-    print("$savedHour hour got from database ----------------");
-    print("$savedMinute minute got from database ----------------");
-
     if(savedHour!>12){
-      _selectedTime = "${savedHour-12}:$savedMinute PM";
+      if(savedMinute!<10){
+        _selectedTime = "${savedHour-12}:0$savedMinute PM";
+      }
+      else{ _selectedTime = "${savedHour-12}:$savedMinute PM";}
     }
     else{
-      _selectedTime = "$savedHour:$savedMinute AM";
+      if(savedMinute!<10){
+        _selectedTime = "${savedHour}:0$savedMinute AM";
+      }
+      else{_selectedTime = "$savedHour:$savedMinute AM";}
     }
-
-
     if(savedHour!=hr && savedMinute!=mn){
       hr = savedHour;
-      mn =savedMinute!;
+      mn =savedMinute;
     }
     if(savedValue==false){
       isSwitched = true;
