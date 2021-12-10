@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:money_manager_app/dialogue/policy_dialogue.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
 import 'package:money_manager_app/actions/notification_api.dart';
 import 'package:money_manager_app/widgetsUI/home_page.dart';
@@ -56,92 +57,100 @@ class _SettingState extends State<Setting> {
         title: Text("Settings",),
       ),
       body: SafeArea(
-        child: Center(
-          child: Container(
-            width: 360,height: 520,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Card(elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(3.0)),
-                  child: ListTile(
-                    leading: Text("Notification",
-                      style:TextStyle(fontSize: 18,
-                          fontFamily:  "Outfit",color: Colors.white,
-                      fontWeight: FontWeight.w500) ,),
-                    tileColor: appbarBackgroundColor,
-                    title: TextButton(
-                        onPressed: (){
-                          selectTime(context);
-                          setState(() {
-                            isSwitched=false;
-                          });
-                        },
-                      child:
-                        Text(_selectedTime,
-                          style: TextStyle(color: color2,fontSize: 18,
-                              fontFamily:  "Outfit",
-                              fontWeight: FontWeight.w500),),
-                    ) ,
-                    trailing:Switch(
-                      value: isSwitched,
-                      onChanged: (bool value) {
-                        saveSettingsPageDataToStorage(context);
-                        //getSavedDataSettingsPage(context);
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              divider(height: 30),
+              Card(elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(3.0)),
+                child: ListTile(
+                  leading: Text("Notification",
+                    style:TextStyle(fontSize: 18,
+                        fontFamily:  "Outfit",color: Colors.white,
+                    fontWeight: FontWeight.w500) ,),
+                  tileColor: appbarBackgroundColor,
+                  title: TextButton(
+                      onPressed: (){
+                        selectTime(context);
                         setState(() {
-                          isSwitched =value;
-                          if(isSwitched){
-                            NotificationApi.showScheduledNotification(
-                                scheduledTime: Time(hr,mn),
-                                title: "Money Manager reminder",
-                                body: "Don't forget to add your spending for today!",
-                                payload: 'HomePage'
-                            );
-                          }
-                          else{
-                            NotificationApi().cancelNotification();
-                          }
+                          isSwitched=false;
                         });
-
                       },
-                      activeTrackColor: Colors.white,
-                      activeColor: Colors.blue,
-                    ),
+                    child:
+                      Text(_selectedTime,
+                        style: TextStyle(color: color2,fontSize: 18,
+                            fontFamily:  "Outfit",
+                            fontWeight: FontWeight.w500),),
+                  ) ,
+                  trailing:Switch(
+                    value: isSwitched,
+                    onChanged: (bool value) {
+                      saveSettingsPageDataToStorage(context);
+                      //getSavedDataSettingsPage(context);
+                      setState(() {
+                        isSwitched =value;
+                        if(isSwitched){
+                          NotificationApi.showScheduledNotification(
+                              scheduledTime: Time(hr,mn),
+                              title: "Money Manager reminder",
+                              body: "Don't forget to add your spending for today!",
+                              payload: 'HomePage'
+                          );
+                        }
+                        else{
+                          NotificationApi().cancelNotification();
+                        }
+                      });
+
+                    },
+                    activeTrackColor: Colors.white,
+                    activeColor: Colors.blue,
                   ),
                 ),
-                divider(height: 10),
-                listTileCard(
-                    leading: "Privacy Policy",leadingFontSize: 18,
-                    leadingTextColor: Colors.white,
-                    onTap: (){},
-                    tileColor: appbarBackgroundColor,
-                ),
-                divider(height: 10),
-                listTileCard(
-                    leading: "Terms and Conditions",leadingFontSize: 18,
-                    leadingTextColor: Colors.white,
-                    onTap: (){
-                    },
-                    tileColor: appbarBackgroundColor,
-                ),
-                divider(height: 10),
-                listTileCard(
-                    leading: "About",leadingFontSize: 18,
-                    leadingTextColor: Colors.white,
-                    onTap: (){
-                      showAboutDialog(context: context,
-                        applicationName: "Money Manager",
-                        applicationIcon: SizedBox(width: 50,height: 50,
-                            child: Image.asset("ImageAssets/money_manager_icon.png"))
+              ),
+              divider(height: 10),
+              listTileCard(
+                  leading: "Privacy Policy",leadingFontSize: 18,
+                  leadingTextColor: Colors.white,
+                  onTap: (){
+                    showDialog(context: context,
+                        builder: (context){
+                          return PolicyDialogue(mdFileName: 'privacy_policy.md');
+                        });
+                  },
+                  tileColor: appbarBackgroundColor,
+              ),
+              divider(height: 10),
+              listTileCard(
+                  leading: "Terms and Conditions",leadingFontSize: 18,
+                  leadingTextColor: Colors.white,
+                  onTap: (){
+                    showDialog(context: context,
+                        builder: (context){
+                          return PolicyDialogue(mdFileName: 'terms_and_conditions.md');
+                        });
+                  },
+                  tileColor: appbarBackgroundColor,
+              ),
+              divider(height: 10),
+              listTileCard(
+                  leading: "About",leadingFontSize: 18,
+                  leadingTextColor: Colors.white,
+                  onTap: (){
+                    showAboutDialog(context: context,
+                      applicationName: "Money Manager",
+                      applicationIcon: SizedBox(width: 50,height: 50,
+                          child: Image.asset("ImageAssets/money_manager_icon_for_about.png"))
 
-                      );
-                    },
-                    tileColor: appbarBackgroundColor,
-                ),
+                    );
+                  },
+                  tileColor: appbarBackgroundColor,
+              ),
 
-              ],
-            ),
+            ],
           ),
         ),
       ),

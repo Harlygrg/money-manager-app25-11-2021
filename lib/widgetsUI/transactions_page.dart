@@ -79,7 +79,6 @@ DateTime _startDate =now;
       for(int i=0;i<=incomeKeys.length-1;i++){
         var incomeAmounts= incomeExpenseBox.get(incomeKeys[i]);
         sumIncAll =sumIncAll + incomeAmounts!.amount!;
-        print("==============sum Income:$sumIncAll ");
       }
       sumInc=sumIncAll;
     }
@@ -97,7 +96,6 @@ DateTime _startDate =now;
       for (int i = 0; i <= incomeKeys.length - 1; i++) {
         var incomeAmounts = incomeExpenseBox.get(incomeKeys[i]);
        sumIncDay = sumIncDay + incomeAmounts!.amount!;
-        print("==============sum Income:$sumIncDay ");
       }
       sumInc=sumIncDay;
     }
@@ -115,7 +113,6 @@ DateTime _startDate =now;
       for (int i = 0; i <= incomeKeys.length - 1; i++) {
         var incomeAmounts = incomeExpenseBox.get(incomeKeys[i]);
         sumIncYesterday = sumIncYesterday + incomeAmounts!.amount!;
-        print("==============sum Income:$sumIncYesterday ");
       }
       sumInc=sumIncYesterday;
     }
@@ -135,7 +132,6 @@ DateTime _startDate =now;
       for (int i = 0; i <= incomeKeys.length - 1; i++) {
         var incomeAmounts = incomeExpenseBox.get(incomeKeys[i]);
         sumIncMonthly =sumIncMonthly + incomeAmounts!.amount!;
-        print("==============sum Income:$sumIncMonthly");
       }
       sumInc=sumIncMonthly;
     }
@@ -144,7 +140,6 @@ DateTime _startDate =now;
       List <int> range=[];
       _startDate=dateRange.start;
       _endDate =dateRange.end;
-      print("start Date :$_startDate, end Date : $_endDate");
       int difference = _endDate.difference(_startDate).inDays;
       for(int i =0;i<=difference; i++){
         range.addAll(incomeExpenseBox.keys.cast<int>().where((key) {
@@ -159,7 +154,6 @@ DateTime _startDate =now;
       for (int i = 0; i <= incomeKeysRange.length - 1; i++) {
         var incomeAmounts = incomeExpenseBox.get(incomeKeysRange[i]);
         sumIncRange =sumIncRange + incomeAmounts!.amount!;
-        print("==============sum Income:$sumIncRange");
       }
       sumInc=sumIncRange;
     }
@@ -174,7 +168,6 @@ DateTime _startDate =now;
         for(int i=0;i<=expenseKeys.length-1;i++){
           var expenseAmounts= incomeExpenseBox.get(expenseKeys[i]);
           sumExpAll =sumExpAll + expenseAmounts!.amount!;
-          print("==============sum Income:$sumExpAll ");
         }
         sumExp=sumExpAll;
       }
@@ -192,7 +185,6 @@ DateTime _startDate =now;
         for (int i = 0; i <= expenseKeys.length - 1; i++) {
           var expenseAmounts = incomeExpenseBox.get(expenseKeys[i]);
           sumExpDay = sumExpDay + expenseAmounts!.amount!;
-          print("==============sum Income:$sumExpDay ");
         }
         sumExp=sumExpDay;
       }
@@ -210,7 +202,6 @@ DateTime _startDate =now;
         for (int i = 0; i <= expenseKeys.length - 1; i++) {
           var expenseAmounts = incomeExpenseBox.get(expenseKeys[i]);
           sumExpYesterday =  sumExpYesterday + expenseAmounts!.amount!;
-          print("==============sum Income:$sumExpYesterday ");
         }
         sumExp= sumExpYesterday;
       }
@@ -230,7 +221,6 @@ DateTime _startDate =now;
         for (int i = 0; i <= expenseKeys.length - 1; i++) {
           var incomeAmounts = incomeExpenseBox.get(expenseKeys[i]);
           sumExpMonthly =sumExpMonthly + incomeAmounts!.amount!;
-          print("==============sum Income:$sumExpMonthly");
         }
         sumExp=sumExpMonthly;
       }
@@ -254,7 +244,6 @@ DateTime _startDate =now;
         for (int i = 0; i <= expenseKeysRange.length - 1; i++) {
           var incomeAmounts = incomeExpenseBox.get(expenseKeysRange[i]);
           sumExpRange =sumExpRange + incomeAmounts!.amount!;
-          print("==============sum Income:$sumExpRange");
         }
         sumExp=sumExpRange;
       }
@@ -429,11 +418,9 @@ DateTime _startDate =now;
                      incomeExpense.get(key)!.createdDate==reversedDateList[j]).toList();
                      List<int> reversedList = List.from(keyInorder.reversed);
                      sortedKeys.addAll(reversedList);
-                     print("------keyIn order $reversedList");
 
                    }
                    keys= sortedKeys.toList();
-                   print("----------$keys");
                  }
                  else if(dropdownValue=="Today") {
                    keys = incomeExpense.keys.cast<int>().where((key) =>
@@ -470,7 +457,6 @@ DateTime _startDate =now;
 
                    }
                    keys =sortedMothlyKeys.toList();
-                   //print("selectedMonth:----------$selectedMonth");
 
                  }
                  else if(dropdownValue=="Select Range"){
@@ -523,21 +509,21 @@ DateTime _startDate =now;
                                    text:"${DateFormat.MMMd().format(incomeExpenseValues!.createdDate)}\n",
                                  style: TextStyle(fontFamily: "Outfit",fontSize: 15,
                                      fontWeight: FontWeight.w400,
-                                     color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): color2,
+                                     color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): Colors.black87,
                                  )
                              ),
                          TextSpan(
                          text:"  ${incomeExpenseValues.category}\n",
                          style: TextStyle(fontFamily: "Outfit",fontSize: 20,
                              fontWeight: FontWeight.w500,
-                             color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): color2,
+                             color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): Colors.black87,
                          )
                          ),
                                  TextSpan(
                                      text:"  ${incomeExpenseValues.amount}",
                                      style: TextStyle(fontFamily: "Outfit",fontSize: 24,
                                          fontWeight: FontWeight.w500,
-                                         color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): color2,
+                                         color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): Colors.black87,
                                      )
                                  )]
                            )

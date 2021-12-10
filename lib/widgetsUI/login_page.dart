@@ -5,8 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:money_manager_app/main.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
 import 'package:money_manager_app/widgetsUI/custom_textfields.dart';
-import 'package:money_manager_app/widgetsUI/home_page.dart';
-
 
 class LoginPage extends StatefulWidget {
   @override

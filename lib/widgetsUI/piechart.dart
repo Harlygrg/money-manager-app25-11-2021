@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
-import 'package:money_manager_app/widgetsUI/textFields.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -310,20 +309,6 @@ class _PiechartState extends State<Piechart> {
                   }
               ),
             ):SizedBox(height: 1,),
-            //divider(height: 35),
-            //---------------------------
-          // incomeCategories(isIncome: true).isNotEmpty && incomePichartSelect?
-          //   piechart(
-          //       piechartDatas: incomeCategories(isIncome: true),
-          //       colorList: colorList
-          //   ):divider(),
-          //---------------------------------------
-          //Center(child: Text("No transactions yet")),
-            //divider(height: 35),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 10),
-            //   child: pichartTitles(text: "EXPENSE"),
-            // ),
             divider(height: 37),
             (incomeCategories(isIncome: true).isNotEmpty && incomePichartSelect)
                 || (incomeCategories(isIncome: false).isNotEmpty && !incomePichartSelect)?

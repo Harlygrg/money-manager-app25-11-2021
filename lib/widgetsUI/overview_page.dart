@@ -184,7 +184,7 @@ void initState() {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    divider(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -197,14 +197,17 @@ void initState() {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-            Text("income",style: TextStyle(fontFamily: "Outfit",
-                color: appbarBackgroundColor,fontWeight:FontWeight.bold ),),
-            Text("expense",style: TextStyle(fontFamily: "Outfit",
-                color: color2,fontWeight: FontWeight.bold),),
-          ],),
+          Padding(
+            padding: const EdgeInsets.only(top: 15,left: 15,right: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+              Text("income",style: TextStyle(fontFamily: "Outfit",
+                  color: appbarBackgroundColor,fontWeight:FontWeight.bold ),),
+              Text("expense",style: TextStyle(fontFamily: "Outfit",
+                  color: color2,fontWeight: FontWeight.bold),),
+            ],),
+          ),
           divider(height: 5),
           SizedBox(width: MediaQuery.of(context).size.width*.9,
             child: ClipRRect(
@@ -247,15 +250,18 @@ void initState() {
                       String category = allCategories[position];
                       double amount   = allAmounts[position];
 
-                      return totalIncomeAndExpenseBalanceTile(
-                        // titleColor: position<incCategories.length ?
-                        // appbarBackgroundColor:color2,
-                          titleText: category,
-                          fontWeight: FontWeight.w500,
-                          amount: amount.toString(),
-                          trailingTextColor: position<incCategories.length ?
-                          appbarBackgroundColor:color2,
-                          fontFamily: "Outfit"
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: totalIncomeAndExpenseBalanceTile(
+                          // titleColor: position<incCategories.length ?
+                          // appbarBackgroundColor:color2,
+                            titleText: category,
+                            fontWeight: FontWeight.w500,
+                            amount: amount.toString(),
+                            trailingTextColor: position<incCategories.length ?
+                            appbarBackgroundColor:color2,
+                            fontFamily: "Outfit"
+                        ),
                       );
                     }, separatorBuilder: (BuildContext context, int index) {
                     return SizedBox();

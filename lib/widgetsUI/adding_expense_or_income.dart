@@ -45,7 +45,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffe6f0ff),
+     // backgroundColor: Color(0xffe6f0ff),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text("Money Manager"),
@@ -144,9 +144,8 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
           ),
 
           TextButton(
-            child:Container(
+            child:SizedBox(
               width: MediaQuery.of(context).size.width*.95,
-              //padding: EdgeInsets.only(left: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -182,7 +181,8 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                                   keys = categories.keys.cast<int>().where((key) => !categories.get(key)!.isIncome).toList();
                                 }
                                 //keys =categories.keys.cast<int>().toList();
-                                return ListView.separated(
+                                return keys.isNotEmpty?
+                                  ListView.separated(
                                   scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
                                  // physics: NeverScrollableScrollPhysics(),
@@ -206,22 +206,6 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                                           Navigator.pop(context);
                                         }
                                     );
-                                    //   ListTile(
-                                    //     title: Text(categoryValues!.category.toString(),
-                                    //       style: TextStyle(
-                                    //           fontSize: 15,fontFamily: "Roboto"
-                                    //       ),),
-                                    //     onTap: (){
-                                    //       categoryValue =categoryBox.get(key)!.category!;
-                                    //       setState(() {
-                                    //         selectedCategory =categoryValue;
-                                    //         catagorySelector =false;
-                                    //         categoryChoosed  =true;
-                                    //       });
-                                    //       // _onSelected(index);
-                                    //
-                                    //     }
-                                    // );
 
                                   }, separatorBuilder:
                                     (BuildContext context, int index)
@@ -229,6 +213,9 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                                   return Divider(thickness: 2,color: Colors.blue[200],);
                                   //SizedBox(height: 5,);
                                 },
+                                ):
+                                Center(
+                                  child: Text("Please add Categories"),
                                 );
                               },
                             ),
@@ -243,74 +230,6 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
 
           ),
 
-          // catagorySelector==true?
-          // Container(height: MediaQuery.of(context).size.height*.20,
-          //   width:MediaQuery.of(context).size.width*.95,
-          //   padding: EdgeInsets.only(left: 10),
-          //   child: ValueListenableBuilder(
-          //     valueListenable: categoryBox.listenable(),
-          //     builder: (context, Box<CategoryModel> categories,_){
-          //       List<int> keys;
-          //       if(incomeCategoryButtonSelected==true){
-          //         keys = categories.keys.cast<int>().where((key) => categories.get(key)!.isIncome).toList();
-          //       }
-          //       else{
-          //         keys = categories.keys.cast<int>().where((key) => !categories.get(key)!.isIncome).toList();
-          //       }
-          //       //keys =categories.keys.cast<int>().toList();
-          //       return ListView.separated(
-          //         scrollDirection: Axis.vertical,
-          //         shrinkWrap: true,
-          //         itemCount: keys.length,
-          //         itemBuilder: (context,index){
-          //           final int key  = keys[index];
-          //           final categoryValues= categories.get(key);
-          //           return GestureDetector(
-          //               child: Center(
-          //                 child: Text(categoryValues!.category.toString(),
-          //                   style: TextStyle(
-          //                       fontSize: 17,fontFamily: "Roboto",fontWeight: FontWeight.w200
-          //                   ),),
-          //               ),
-          //               onTap: (){
-          //                 categoryValue =categoryBox.get(key)!.category!;
-          //                 setState(() {
-          //                   selectedCategory =categoryValue;
-          //                   catagorySelector =false;
-          //                   categoryChoosed  =true;
-          //                 });
-          //                 // _onSelected(index);
-          //
-          //               }
-          //           );
-          //           //   ListTile(
-          //           //     title: Text(categoryValues!.category.toString(),
-          //           //       style: TextStyle(
-          //           //           fontSize: 15,fontFamily: "Roboto"
-          //           //       ),),
-          //           //     onTap: (){
-          //           //       categoryValue =categoryBox.get(key)!.category!;
-          //           //       setState(() {
-          //           //         selectedCategory =categoryValue;
-          //           //         catagorySelector =false;
-          //           //         categoryChoosed  =true;
-          //           //       });
-          //           //       // _onSelected(index);
-          //           //
-          //           //     }
-          //           // );
-          //
-          //         }, separatorBuilder:
-          //           (BuildContext context, int index)
-          //       {
-          //         return Divider(thickness: 2,color: Colors.blue[200],);
-          //           //SizedBox(height: 5,);
-          //       },
-          //       );
-          //     },
-          //   ),
-          // )
-          //     : divider(height: 1),
           Form(key:_formKey ,
               child: Padding(
                 padding: const EdgeInsets.only(left: 15,right: 15),
@@ -435,7 +354,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
               },
               style: OutlinedButton.styleFrom(
                   primary: Colors.white,
-                  backgroundColor: Colors.blueGrey
+                  backgroundColor: Colors.white
               ),
               child: Text("back",style:
               TextStyle(color: appbarBackgroundColor,fontSize: 18,fontFamily: "Outfit"),),
@@ -446,20 +365,3 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
     );
   }
 }
-// DatePicker.showDatePicker(
-//       context,
-//     theme: DatePickerTheme(
-//       containerHeight: 210,
-//     ),showTitleActions: true,
-//     minTime: DateTime(2010,12,31),
-//     maxTime: currentDate,
-//     onConfirm: (date){
-//       print("confirm $date");
-//       currentDate =date;
-//       _date = DateFormat.yMMMEd().format(date);
-//       setState(() {
-//       });
-//
-//     },
-//     //currentTime: DateTime.now(), locale: LocaleType.en
-// );

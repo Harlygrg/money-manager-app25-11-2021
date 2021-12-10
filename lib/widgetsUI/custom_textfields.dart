@@ -26,11 +26,6 @@ Widget expenseOrIncomeTextField({
           hintStyle: TextStyle(color: Colors.grey),
           filled: true,
           fillColor: Colors.white70,
-
-          // enabledBorder: OutlineInputBorder(
-          //
-          //   borderSide: BorderSide(color: Colors.red, width: 2),
-          // ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(0)),
             borderSide: BorderSide(color: Colors.red),

@@ -1,14 +1,10 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:money_manager_app/main.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
 import 'package:money_manager_app/widgetsUI/transactions_page.dart';
 import 'package:money_manager_app/widgetsUI/overview_page.dart';
 import 'package:money_manager_app/widgetsUI/categories_page.dart';
-import 'package:money_manager_app/actions/notification_api.dart';
-import 'package:money_manager_app/widgetsUI/adding_expense_or_income.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
   @override

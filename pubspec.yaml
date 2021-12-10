@@ -40,6 +40,7 @@ dependencies:
   rxdart:
   flutter_native_timezone:
   http:
+  flutter_markdown:
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -80,6 +81,8 @@ flutter:
   assets:
     - ImageAssets/undraw_make_it_rain_iwk4-removebg-preview.png
     - ImageAssets/money_manager_icon.png
+    - ImageAssets/money_manager_icon_for_about.png
+    - termsAndPolicy/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
