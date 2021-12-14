@@ -128,7 +128,7 @@ Widget totalIncomeAndTotalExpenseShowingRow({
 
 }){
   return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       totalIncomeOrExpense(value: totalIncomeText,textColor: Colors.white,
           value2:totalIncome,colorList: [appbarBackgroundColor,color2] ),

@@ -337,33 +337,30 @@ DateTime _startDate =now;
                     ),
                     borderRadius: BorderRadius.all(Radius.circular(3))
                   ),
-                  child: FittedBox(
-                    fit:BoxFit.fitWidth,
-                    child: DropdownButton(
-                      underline: AutoSizeText(""),
-                      style:   TextStyle(
-                          color: appbarBackgroundColor,
-                        fontFamily: "Outfit",
-                        fontWeight: FontWeight.w500,
-                        fontSize: 17,
-                      ),
-                      focusColor:Colors.white,
-                      hint: AutoSizeText("Select Category"),
-                      items: items.map((itemsname) {
-                        return DropdownMenuItem(
-                          value: itemsname,
-                          child: AutoSizeText(itemsname),
-                        );
-                      }).toList(),
-                      onChanged:(String ?newValue){
-                        setState(() {
-                          dropdownValue =newValue!;
-                          incomeSum();
-                          expenseSum();
-                        });
-                      },
-                      value: dropdownValue,
+                  child: DropdownButton(
+                    underline: AutoSizeText(""),
+                    style:   TextStyle(
+                        color: appbarBackgroundColor,
+                      fontFamily: "Outfit",
+                      fontWeight: FontWeight.w500,
+                      fontSize: 17,
                     ),
+                    focusColor:Colors.white,
+                    hint: AutoSizeText("Select Category"),
+                    items: items.map((itemsname) {
+                      return DropdownMenuItem(
+                        value: itemsname,
+                        child: AutoSizeText(itemsname),
+                      );
+                    }).toList(),
+                    onChanged:(String ?newValue){
+                      setState(() {
+                        dropdownValue =newValue!;
+                        incomeSum();
+                        expenseSum();
+                      });
+                    },
+                    value: dropdownValue,
                   ),
                 ),
                 divider(height: 15),
