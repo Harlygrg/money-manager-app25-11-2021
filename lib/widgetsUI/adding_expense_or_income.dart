@@ -8,6 +8,7 @@ import 'package:money_manager_app/actions/data_model.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import '../main.dart';
 class AddIncomeOrExpense extends StatefulWidget {
@@ -76,7 +77,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                         });
                       }
                   ),
-                  Text(
+                  AutoSizeText(
                     "Income",
                     style: TextStyle(
                         fontSize: 20,
@@ -101,7 +102,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                         });
                       }
                   ),
-                  Text(
+                  AutoSizeText(
                     "Expense ",
                     style: TextStyle(
                         fontSize: 20,
@@ -166,26 +167,25 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                     builder: (context){
                       return AlertDialog(
                         actions: [
-                          Container(
-                            height: MediaQuery.of(context).size.height*.50,
-                            width:MediaQuery.of(context).size.width*.90,
-                            padding: EdgeInsets.all(10),
-                            child: ValueListenableBuilder(
-                              valueListenable: categoryBox.listenable(),
-                              builder: (context, Box<CategoryModel> categories,_){
-                                List<int> keys;
-                                if(incomeCategoryButtonSelected==true){
-                                  keys = categories.keys.cast<int>().where((key) => categories.get(key)!.isIncome).toList();
-                                }
-                                else{
-                                  keys = categories.keys.cast<int>().where((key) => !categories.get(key)!.isIncome).toList();
-                                }
-                                //keys =categories.keys.cast<int>().toList();
-                                return keys.isNotEmpty?
-                                  ListView.separated(
+                          ValueListenableBuilder(
+                            valueListenable: categoryBox.listenable(),
+                            builder: (context, Box<CategoryModel> categories,_){
+                              List<int> keys;
+                              if(incomeCategoryButtonSelected==true){
+                                keys = categories.keys.cast<int>().where((key) => categories.get(key)!.isIncome).toList();
+                              }
+                              else{
+                                keys = categories.keys.cast<int>().where((key) => !categories.get(key)!.isIncome).toList();
+                              }
+                              //keys =categories.keys.cast<int>().toList();
+                              return keys.isNotEmpty?
+                                SizedBox(
+                                  height: MediaQuery.of(context).size.height*.50,
+                                  width:MediaQuery.of(context).size.width*.90,
+                                  child: ListView.separated(
                                   scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
-                                 // physics: NeverScrollableScrollPhysics(),
+                               // physics: NeverScrollableScrollPhysics(),
                                   itemCount: keys.length,
                                   itemBuilder: (context,index){
                                     final int key  = keys[index];
@@ -209,16 +209,19 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
 
                                   }, separatorBuilder:
                                     (BuildContext context, int index)
-                                {
+                              {
                                   return Divider(thickness: 2,color: Colors.blue[200],);
                                   //SizedBox(height: 5,);
-                                },
-                                ):
-                                Center(
-                                  child: Text("Please add Categories"),
-                                );
                               },
-                            ),
+                              ),
+                                ):
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Text("Please add Categories"),
+                                ),
+                              );
+                            },
                           )
                               //: divider(height: 1),
                         ],

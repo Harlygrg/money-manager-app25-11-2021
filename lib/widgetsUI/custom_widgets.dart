@@ -4,6 +4,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 final Color appbarBackgroundColor = Color(0xff005c99);
 final Color color2 = Color(0xff00bfff);
@@ -77,7 +78,7 @@ Widget elevatedButton({
     onPrimary: Colors.white, // foreground
   ),
       onPressed: onPressed,
-      child: Text(buttonName,style: TextStyle(color:textColor ,fontFamily: "Outfit",fontWeight: FontWeight.w500),
+      child: AutoSizeText(buttonName,style: TextStyle(color:textColor ,fontFamily: "Outfit",fontWeight: FontWeight.w500),
       ));
 }
 

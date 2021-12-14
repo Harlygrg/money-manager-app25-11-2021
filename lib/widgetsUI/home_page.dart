@@ -77,6 +77,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         ],
         bottom: TabBar(
           controller: _tabController,
+          isScrollable: true,
           tabs:<Widget> [
             Tab(
               child: tabbarTxt(text: "Overview"),
@@ -120,7 +121,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 padding:EdgeInsets.all(15.0),
                 child: Icon(
                   Icons.add,
-                  size: 30.0,
+                  size: 20.0,
                   color: Colors.white,
                 ),
               ),

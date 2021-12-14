@@ -1,10 +1,12 @@
 
-
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:money_manager_app/main.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
 import 'package:money_manager_app/widgetsUI/custom_textfields.dart';
+import 'package:money_manager_app/actions/data_model.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,12 +14,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  int loginPageData =0;
+  bool loginPageData =false;
   final pinController =TextEditingController();
   final forgotpinRecovary =TextEditingController();
   final newPinController =TextEditingController();
   final newPinController2 =TextEditingController();
-
+  late Box<CategoryModel> categoryBox;
+  final initialCatList =["Shopping","Clothes","Kids","Education",
+                        "Holidays","Entertainment","Salary","Other"];
   Widget newUserLogin({
     required String userStatus
   }){
@@ -86,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) => getSavedData(context));
+    categoryBox = Hive.box<CategoryModel>(categoryBoxName);
   }
 
   @override
@@ -166,9 +171,19 @@ class _LoginPageState extends State<LoginPage> {
                     buttonName: "Proceed",
                     buttonBackground:  Color(0xff005c99),
                     onPressed: (){
-                      loginPageData = 15;
+                      for(int i=0;i<initialCatList.length;i++){
+                        if(i<6){
+                          CategoryModel catModel = CategoryModel(isIncome: false,category: initialCatList[i]);
+                          categoryBox.add(catModel);
+                        }
+                        else{
+                          CategoryModel catModel = CategoryModel(isIncome: true,category: initialCatList[i]);
+                          categoryBox.add(catModel);
+                        }
+                      }
+                      loginPageData = true;
                       saveDataToStorage();
-                      Navigator.pushNamed(context, "HomePage");
+                      Navigator.pushReplacementNamed(context, "HomePage");
                     }),
               )
 
@@ -177,12 +192,12 @@ class _LoginPageState extends State<LoginPage> {
   }
   Future<void> saveDataToStorage()async{
     print(loginPageData);
-   await sharedPreferences.setInt('login_data', loginPageData);
+   await sharedPreferences.setBool('login_data', loginPageData);
   }
 }
 Future<void>getSavedData(BuildContext context)async{
-  final savedValue =  sharedPreferences.getInt("login_data");
-  if(savedValue!=0){
+  final savedValue =  sharedPreferences.getBool("login_data");
+  if(savedValue==true){
     Navigator.pushReplacementNamed(context, "HomePage");
   }
 }

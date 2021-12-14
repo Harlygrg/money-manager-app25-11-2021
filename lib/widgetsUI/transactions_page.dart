@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_manager_app/actions/data_model.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 
 
@@ -279,57 +280,53 @@ DateTime _startDate =now;
               children: [
                 divider(width: 2),
                 dropdownValue=="Monthly"?
-                Container(
-                  width: 176,
-                  margin: EdgeInsets.only(right: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: timePeriodeChageIcon(
-                            onPressed: (){
-                              if(dropdownValue=="Monthly"){
-                                setState(() {
-                                  if(incrementCounter<11){
-                                    incrementCounter=incrementCounter+1;
-                                  }
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: timePeriodeChageIcon(
+                          onPressed: (){
+                            if(dropdownValue=="Monthly"){
+                              setState(() {
+                                if(incrementCounter<11){
+                                  incrementCounter=incrementCounter+1;
+                                }
 
-                                    selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
-                                    incomeSum();
-                                    expenseSum();
+                                selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
+                                incomeSum();
+                                expenseSum();
 
-                                });
-                              }
-                            },
-                            icon: const Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,)
-                        ),
+                              });
+                            }
+                          },
+                          icon: const Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,)
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: timePeriodeChageIcon(
-                            onPressed: (){
-                              if(dropdownValue=="Monthly"){
-                                setState(() {
-                                  if(incrementCounter>0) {
-                                    incrementCounter = incrementCounter - 1;
-                                    selectedMonth = DateFormat('MMMM').format(
-                                        monthlyDateSelector());
-                                    incomeSum();
-                                    expenseSum();
-                                  }
-                                });
-                              }
-                            },
-                            icon: const Icon(Icons.arrow_forward_ios,size: 25,color: Colors.white,)
-                            //arrow_back_ios
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: timePeriodeChageIcon(
+                          onPressed: (){
+                            if(dropdownValue=="Monthly"){
+                              setState(() {
+                                if(incrementCounter>0) {
+                                  incrementCounter = incrementCounter - 1;
+                                  selectedMonth = DateFormat('MMMM').format(
+                                      monthlyDateSelector());
+                                  incomeSum();
+                                  expenseSum();
+                                }
+                              });
+                            }
+                          },
+                          icon: const Icon(Icons.arrow_forward_ios,size: 25,color: Colors.white,)
+                          //arrow_back_ios
+                      ),
+                    )
+                  ],
                 ):divider(),
                 Container(
-                  margin: const EdgeInsets.only(top: 5),
+                  margin: const EdgeInsets.only(top: 5,right: 3),
                   height: 40,
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
@@ -340,30 +337,33 @@ DateTime _startDate =now;
                     ),
                     borderRadius: BorderRadius.all(Radius.circular(3))
                   ),
-                  child: DropdownButton(
-                    underline: Text(""),
-                    style:   TextStyle(
-                        color: appbarBackgroundColor,
-                      fontFamily: "Outfit",
-                      fontWeight: FontWeight.w500,
-                      fontSize: 17,
+                  child: FittedBox(
+                    fit:BoxFit.fitWidth,
+                    child: DropdownButton(
+                      underline: AutoSizeText(""),
+                      style:   TextStyle(
+                          color: appbarBackgroundColor,
+                        fontFamily: "Outfit",
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                      ),
+                      focusColor:Colors.white,
+                      hint: AutoSizeText("Select Category"),
+                      items: items.map((itemsname) {
+                        return DropdownMenuItem(
+                          value: itemsname,
+                          child: AutoSizeText(itemsname),
+                        );
+                      }).toList(),
+                      onChanged:(String ?newValue){
+                        setState(() {
+                          dropdownValue =newValue!;
+                          incomeSum();
+                          expenseSum();
+                        });
+                      },
+                      value: dropdownValue,
                     ),
-                    focusColor:Colors.white,
-                    hint: Text("Select Category"),
-                    items: items.map((itemsname) {
-                      return DropdownMenuItem(
-                        value: itemsname,
-                        child: Text(itemsname),
-                      );
-                    }).toList(),
-                    onChanged:(String ?newValue){
-                      setState(() {
-                        dropdownValue =newValue!;
-                        incomeSum();
-                        expenseSum();
-                      });
-                    },
-                    value: dropdownValue,
                   ),
                 ),
                 divider(height: 15),

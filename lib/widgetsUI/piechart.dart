@@ -257,46 +257,42 @@ class _PiechartState extends State<Piechart> {
               ),
             ),
             dropdownValues=="Monthly"?
-            Container(
-              //width: 176,
-              margin: EdgeInsets.only(right: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  timePeriodeChageIcon(
-                      onPressed: (){
-                        if(dropdownValues=="Monthly"){
-                          setState(() {
-                            if(incrementCounter>0){
-                              incrementCounter=incrementCounter-1;
-                              selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
-                              incomeCategories(isIncome: true);
-                              incomeCategories(isIncome: false);
-                            }
-                          });
-                        }
-                      },
-                      icon: const Icon(Icons.arrow_back_ios,size: 25,)
-                  ),
-                  timePeriodeChageIcon(
-                      onPressed: (){
-                        if(dropdownValues=="Monthly"){
-                          setState(() {
-                            incrementCounter=incrementCounter+1;
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                timePeriodeChageIcon(
+                    onPressed: (){
+                      if(dropdownValues=="Monthly"){
+                        setState(() {
+                          if(incrementCounter>0){
+                            incrementCounter=incrementCounter-1;
                             selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
                             incomeCategories(isIncome: true);
                             incomeCategories(isIncome: false);
-                          });
-                        }
-                      },
-                      icon: const Icon(Icons.arrow_forward_ios_rounded,size: 25,)
-                    //arrow_back_ios
-                  ),divider(width: 100),
-                  Text(
-                    selectedMonth,
-                    style: TextStyle(fontFamily: "BalsamiqSans",fontSize: 17),),
-                ],
-              ),
+                          }
+                        });
+                      }
+                    },
+                    icon: const Icon(Icons.arrow_back_ios,size: 25,)
+                ),
+                timePeriodeChageIcon(
+                    onPressed: (){
+                      if(dropdownValues=="Monthly"){
+                        setState(() {
+                          incrementCounter=incrementCounter+1;
+                          selectedMonth=DateFormat('MMMM').format(monthlyDateSelector());
+                          incomeCategories(isIncome: true);
+                          incomeCategories(isIncome: false);
+                        });
+                      }
+                    },
+                    icon: const Icon(Icons.arrow_forward_ios_rounded,size: 25,)
+                  //arrow_back_ios
+                ),divider(width: MediaQuery.of(context).size.width*.25),
+                Text(
+                  selectedMonth,
+                  style: TextStyle(fontFamily: "BalsamiqSans",fontSize: 17),),
+              ],
             ): divider(height: 1),
             dropdownValues=="Select Range" ?
             Padding(

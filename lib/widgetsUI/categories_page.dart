@@ -38,47 +38,51 @@ class _CategoriesState extends State<Categories> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      //crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
 
         divider(height: 10),
-        SizedBox(width: 188,
+        SizedBox(
+          width: MediaQuery.of(context).size.width*.65,
           child: Row(
             //mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              elevatedButton(
-                  borderRadius: 0,
-                  buttonName: "INCOME",
-                  buttonBackground: categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
-                  textColor: !categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
-                  onPressed: (){
-                    incomeCategoryButtonSelected = true;
-                    //incomeTrue =true;
-                    setState(() {
+              Expanded(
+                child:elevatedButton(
+                    borderRadius: 0,
+                    buttonName: "INCOME",
+                    buttonBackground: categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
+                    textColor: !categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
+                    onPressed: (){
+                      incomeCategoryButtonSelected = true;
+                      //incomeTrue =true;
+                      setState(() {
 
-                      categoriesButtonColorChecker=true;
-                    });
-                  }
+                        categoriesButtonColorChecker=true;
+                      });
+                    }
+                ),
               ),
-              elevatedButton(
-                  buttonName: "EXPENSE",
-                  borderRadius: 0,
-                  buttonBackground: !categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
-                  textColor: categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
-                  onPressed: (){
-                    //incomeTrue =false;
-                    incomeCategoryButtonSelected = false;
-                    setState(() {
-                      categoriesButtonColorChecker=false;
-                    });
-                  }
+              Expanded(
+                child: elevatedButton(
+                    buttonName: "EXPENSE",
+                    borderRadius: 0,
+                    buttonBackground: !categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
+                    textColor: categoriesButtonColorChecker?appbarBackgroundColor:Colors.white,
+                    onPressed: (){
+                      //incomeTrue =false;
+                      incomeCategoryButtonSelected = false;
+                      setState(() {
+                        categoriesButtonColorChecker=false;
+                      });
+                    }
+                ),
               ),
             ],
           ),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height*.55,
-          width:MediaQuery.of(context).size.width*.85,
+        divider(height: 15),
+        Expanded(
           child: ValueListenableBuilder(
             valueListenable: categoryBox.listenable(),
             builder: (context, Box<CategoryModel> categories,_){
@@ -99,60 +103,63 @@ class _CategoriesState extends State<Categories> {
                   final int key  = keys[index];
                   final categoryValues= categories.get(key);
                   return
-                      Card(
-                        elevation: 5,
-                        child: GestureDetector(
-                          child: Container(
-                            padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
-                            width: 250,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              gradient:  LinearGradient(
-                                  colors: index%2==0 ?
-                                  [appbarBackgroundColor,color2]:[color2,appbarBackgroundColor,]
+                      Padding(
+                        padding:const EdgeInsets.only(left: 25,right: 25),
+                        child: Card(
+                          elevation: 5,
+                          child: GestureDetector(
+                            child: Container(
+                              padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
+                              width: 250,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                gradient:  LinearGradient(
+                                    colors: index%2==0 ?
+                                    [appbarBackgroundColor,color2]:[color2,appbarBackgroundColor,]
+                                ),
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                              borderRadius: BorderRadius.circular(5),
+                              child: Text(categoryValues!.category.toString(),
+                              style:const TextStyle(fontSize: 20,fontFamily: "Outfit",
+                                  fontWeight: FontWeight.w500,color: Colors.white)),
                             ),
-                            child: Text(categoryValues!.category.toString(),
-                            style:const TextStyle(fontSize: 20,fontFamily: "Outfit",
-                                fontWeight: FontWeight.w500,color: Colors.white)),
+                            onTap: (){
+                              showDialog(context: context,
+                                  builder: (context){
+                                    return AlertDialog(
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            textButton(
+                                              text: " Delete",
+                                              onPressed: (){
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(
+                                                      content:Text('Do you want to delete'),
+                                                      backgroundColor: appbarBackgroundColor,
+                                                      action: SnackBarAction(
+                                                        textColor: color2,
+                                                          label:"yes",
+                                                          onPressed: (){
+                                                            categoryBox.delete(key);
+                                                          }
+                                                      ),
+                                                    ));
+                                                Navigator.pop(context);
+                                                print("Item Deleted");
+                                              },
+
+                                            ),
+
+
+                                          ],
+                                        )
+                                    );
+                                  }
+                              );
+                            },
                           ),
-                          onTap: (){
-                            showDialog(context: context,
-                                builder: (context){
-                                  return AlertDialog(
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          textButton(
-                                            text: " Delete",
-                                            onPressed: (){
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                  SnackBar(
-                                                    content:Text('Do you want to delete'),
-                                                    backgroundColor: appbarBackgroundColor,
-                                                    action: SnackBarAction(
-                                                      textColor: color2,
-                                                        label:"yes",
-                                                        onPressed: (){
-                                                          categoryBox.delete(key);
-                                                        }
-                                                    ),
-                                                  ));
-                                              Navigator.pop(context);
-                                              print("Item Deleted");
-                                            },
-
-                                          ),
-
-
-                                        ],
-                                      )
-                                  );
-                                }
-                            );
-                          },
                         ),
                       );
                 }, separatorBuilder: (BuildContext context, int index)
@@ -165,78 +172,81 @@ class _CategoriesState extends State<Categories> {
             },
           ),
         ),
-        ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: Color(0xff005c99),
-            ),
-            child: Text("+ Category"),
-            onPressed: (){
-              showDialog(context: context,
-                  builder: (context){
-                    return AlertDialog(
-                        content: Container(
-                          width: 100,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 90),
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xff005c99),
+              ),
+              child: Text("+ Category"),
+              onPressed: (){
+                showDialog(context: context,
+                    builder: (context){
+                      return AlertDialog(
+                          content: Container(
+                            width: 100,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
 
-                              Form(
-                                key: formKey,
-                                child: TextFormField(
-                                  autovalidateMode:AutovalidateMode.onUserInteraction ,
+                                Form(
+                                  key: formKey,
+                                  child: TextFormField(
+                                    autovalidateMode:AutovalidateMode.onUserInteraction ,
 
-                                  validator: (value){
-                                    if(value == null || value.isEmpty){
-                                      return 'Please Enter Category';
-                                    }
-                                    else if(value.length>=15){
-                                      return 'Please Enter less than 20 letters';
-                                    }
-                                    return null;
-                                  },
-                                  controller:newCategoryController ,
-                                  decoration: InputDecoration(
-                                    hintText: "Category Name",
+                                    validator: (value){
+                                      if(value == null || value.isEmpty){
+                                        return 'Please Enter Category';
+                                      }
+                                      else if(value.length>=15){
+                                        return 'Please Enter less than 20 letters';
+                                      }
+                                      return null;
+                                    },
+                                    controller:newCategoryController ,
+                                    decoration: InputDecoration(
+                                      hintText: "Category Name",
+                                    ),
                                   ),
                                 ),
-                              ),
-                              divider(height: 5),
-                              elevatedButton(
-                                  buttonName: "Save Category",
-                                  buttonBackground: Color(0xff005c99),
-                                  onPressed: (){
-                                    final isValid = formKey.currentState!.validate();
-                                    final String newCategory =newCategoryController.text;
+                                divider(height: 5),
+                                elevatedButton(
+                                    buttonName: "Save Category",
+                                    buttonBackground: Color(0xff005c99),
+                                    onPressed: (){
+                                      final isValid = formKey.currentState!.validate();
+                                      final String newCategory =newCategoryController.text;
 
-                                    if(isValid){
-                                      if(incomeCategoryButtonSelected==true){
-                                        CategoryModel category = CategoryModel(
-                                            category: newCategory,isIncome: true
-                                        );
-                                        categoryBox.add(category);
-                                        print("Income category added-------------");
+                                      if(isValid){
+                                        if(incomeCategoryButtonSelected==true){
+                                          CategoryModel category = CategoryModel(
+                                              category: newCategory,isIncome: true
+                                          );
+                                          categoryBox.add(category);
+                                          print("Income category added-------------");
+                                        }
+                                        else{
+                                          CategoryModel category = CategoryModel(
+                                              category: newCategory,isIncome: false
+                                          );
+                                          categoryBox.add(category);
+                                          print("Expense Category added-------------");
+                                        }
+
+                                        newCategoryController.clear();
+                                        Navigator.pop(context);
                                       }
-                                      else{
-                                        CategoryModel category = CategoryModel(
-                                            category: newCategory,isIncome: false
-                                        );
-                                        categoryBox.add(category);
-                                        print("Expense Category added-------------");
-                                      }
 
-                                      newCategoryController.clear();
-                                      Navigator.pop(context);
-                                    }
+                                    })
+                              ],
+                            ),
+                          )
+                      );
+                    }
+                );
 
-                                  })
-                            ],
-                          ),
-                        )
-                    );
-                  }
-              );
-
-            }),
+              }),
+        ),
       ],
     );
   }

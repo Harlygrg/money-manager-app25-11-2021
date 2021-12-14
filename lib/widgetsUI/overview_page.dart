@@ -151,7 +151,7 @@ void initState() {
               elevation: 5,
               child: Container(
                 width: MediaQuery.of(context).size.width*.9,
-                height: MediaQuery.of(context).size.height*.185,
+               // height: MediaQuery.of(context).size.height*.185,
                 padding: EdgeInsets.all(8),
                 //margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
                 decoration: BoxDecoration(
@@ -184,7 +184,7 @@ void initState() {
                         ),
                       ),
                     ),
-                    divider(height: 10),
+                    divider(height:10),//before
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
