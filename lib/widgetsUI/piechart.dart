@@ -8,6 +8,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_manager_app/actions/data_model.dart';
 import 'package:money_manager_app/main.dart';
 import 'package:intl/intl.dart';
+import 'package:sizer/sizer.dart';
 
 class Piechart extends StatefulWidget {
   @override
@@ -179,7 +180,7 @@ class _PiechartState extends State<Piechart> {
           children: [
             divider(height: 15),
             SizedBox(
-              width: 180,
+              width: MediaQuery.of(context).size.width*.48,
               child: Row(
                   children:[
                     elevatedButton(
@@ -229,17 +230,23 @@ class _PiechartState extends State<Piechart> {
                     ),
                     child: DropdownButton(
                       underline: Text(""),
-                      style:  const TextStyle(
+                      style:  TextStyle(
                         color: Colors.blue,
-                        fontFamily: "BalsamiqSans",
-                        fontSize: 17,
+                        fontFamily: "Outfit",
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12.sp,
                       ),
                       focusColor:Colors.white,
                       hint: Text("Select Category"),
                       items: items.map((itemsname) {
                         return DropdownMenuItem(
                           value: itemsname,
-                          child: Text(itemsname),
+                          child: Text(itemsname,style:TextStyle(
+                            color: Colors.blue,
+                            fontFamily: "Outfit",
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500
+                          )),
                         );
                       }).toList(),
                       onChanged:(String ?newValue){
@@ -291,7 +298,7 @@ class _PiechartState extends State<Piechart> {
                 ),divider(width: MediaQuery.of(context).size.width*.25),
                 Text(
                   selectedMonth,
-                  style: TextStyle(fontFamily: "BalsamiqSans",fontSize: 17),),
+                  style: TextStyle(fontFamily: "Outfit",fontSize: 12.sp,fontWeight: FontWeight.w500),),
               ],
             ): divider(height: 1),
             dropdownValues=="Select Range" ?

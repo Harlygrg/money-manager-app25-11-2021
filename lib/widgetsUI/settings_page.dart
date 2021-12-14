@@ -8,6 +8,7 @@ import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
 import 'package:money_manager_app/actions/notification_api.dart';
 import 'package:money_manager_app/widgetsUI/home_page.dart';
 import '../main.dart';
+import 'package:sizer/sizer.dart';
 
 class Setting extends StatefulWidget {
   const Setting({Key? key}) : super(key: key);
@@ -68,7 +69,7 @@ class _SettingState extends State<Setting> {
               borderRadius: BorderRadius.circular(3.0)),
                 child: ListTile(
                   leading: Text("Notification",
-                    style:TextStyle(fontSize: 18,
+                    style:TextStyle(fontSize: 13.sp,
                         fontFamily:  "Outfit",color: Colors.white,
                     fontWeight: FontWeight.w500) ,),
                   tileColor: appbarBackgroundColor,
@@ -81,7 +82,7 @@ class _SettingState extends State<Setting> {
                       },
                     child:
                       Text(_selectedTime,
-                        style: TextStyle(color: color2,fontSize: 18,
+                        style: TextStyle(color: color2,fontSize:  13.sp,
                             fontFamily:  "Outfit",
                             fontWeight: FontWeight.w500),),
                   ) ,
@@ -113,7 +114,7 @@ class _SettingState extends State<Setting> {
               ),
               divider(height: 10),
               listTileCard(
-                  leading: "Privacy Policy",leadingFontSize: 18,
+                  leading: "Privacy Policy",leadingFontSize:  13.sp,
                   leadingTextColor: Colors.white,
                   onTap: (){
                     showDialog(context: context,
@@ -125,7 +126,7 @@ class _SettingState extends State<Setting> {
               ),
               divider(height: 10),
               listTileCard(
-                  leading: "Terms and Conditions",leadingFontSize: 18,
+                  leading: "Terms and Conditions",leadingFontSize:  13.sp,
                   leadingTextColor: Colors.white,
                   onTap: (){
                     showDialog(context: context,
@@ -137,7 +138,7 @@ class _SettingState extends State<Setting> {
               ),
               divider(height: 10),
               listTileCard(
-                  leading: "About",leadingFontSize: 18,
+                  leading: "About",leadingFontSize:  13.sp,
                   leadingTextColor: Colors.white,
                   onTap: (){
                     showAboutDialog(context: context,

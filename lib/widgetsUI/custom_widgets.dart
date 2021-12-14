@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:sizer/sizer.dart';
 
 final Color appbarBackgroundColor = Color(0xff005c99);
 final Color color2 = Color(0xff00bfff);
@@ -239,7 +240,7 @@ Widget timePeriodeChageIcon({
     elevation: 2.0,
     fillColor: appbarBackgroundColor,
     child: icon,
-    padding: EdgeInsets.all(1.0),
+    padding: EdgeInsets.all(0.0),
     shape: CircleBorder(),
   );
 }
@@ -256,9 +257,9 @@ Widget dateRangeShow({
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(initialDate,style: TextStyle(fontFamily: "Roboto",fontSize: 17)),
+          Text(initialDate,style: TextStyle(fontFamily: "Roboto",fontSize: 12.5.sp)),
 
-          Text(finalDate,style: TextStyle(fontFamily: "Roboto",fontSize: 17))
+          Text(finalDate,style: TextStyle(fontFamily: "Roboto",fontSize: 12.5.sp))
         ],
       ),
       onTap:onTap ,

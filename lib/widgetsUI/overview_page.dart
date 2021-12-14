@@ -9,6 +9,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_manager_app/main.dart';
 import 'package:intl/intl.dart';
+import 'package:sizer/sizer.dart';
 class Overview extends StatefulWidget {
   @override
   _OverviewState createState() => _OverviewState();
@@ -93,7 +94,7 @@ void initState() {
   Widget incomeExpenseBalanceText(
       {
         required String text,
-        double fontSize = 20,
+         required double fontSize ,
         FontWeight fontWeight= FontWeight.bold,
         Color color = Colors.black,
         String fontFamily = "ArchitectsDaughter"
@@ -123,10 +124,10 @@ void initState() {
         children: [
           incomeExpenseBalanceText(
             text: titleText,color: titleColor,
-            fontSize: 17,fontFamily: fontFamily,fontWeight: fontWeight
+            fontSize: 13.sp,fontFamily: fontFamily,fontWeight: fontWeight
           ),
           incomeExpenseBalanceText(
-              text: amount,color: trailingTextColor,fontSize: 17,
+              text: amount,color: trailingTextColor,fontSize: 13.sp,
               fontFamily: fontFamily,fontWeight: fontWeight
           ),
         ],
@@ -177,9 +178,9 @@ void initState() {
                         text: TextSpan(
                           children:  <TextSpan>[
                             TextSpan(text: 'Balance: ',
-                                style: TextStyle(fontSize: 15,fontFamily: "Outfit",fontWeight: FontWeight.w400)),
+                                style: TextStyle(fontSize: 11.5.sp,fontFamily: "Outfit",fontWeight: FontWeight.w400)),
                             TextSpan(text: '${balance()}',
-                                style: TextStyle(fontSize: 25,fontFamily: "Outfit",fontWeight: FontWeight.w600)),
+                                style: TextStyle(fontSize: 19.5.sp,fontFamily: "Outfit",fontWeight: FontWeight.w600)),
                           ],
                         ),
                       ),
@@ -307,8 +308,8 @@ void initState() {
         text: TextSpan(
             children: <TextSpan>[
               TextSpan(text: text1,
-                  style: TextStyle(fontSize: 15,fontFamily: "Outfit",fontWeight: FontWeight.w400)),
-              TextSpan(text:text2,style: TextStyle(fontSize: 18,fontFamily: "Outfit",fontWeight: FontWeight.w500)),
+                  style: TextStyle(fontSize: 11.sp,fontFamily: "Outfit",fontWeight: FontWeight.w400)),
+              TextSpan(text:text2,style: TextStyle(fontSize: 13.5.sp,fontFamily: "Outfit",fontWeight: FontWeight.w500)),
             ]
         ),
       ),

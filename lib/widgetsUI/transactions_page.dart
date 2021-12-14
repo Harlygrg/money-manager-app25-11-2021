@@ -1,6 +1,5 @@
 
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:money_manager_app/main.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
@@ -12,8 +11,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_manager_app/actions/data_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-
-
+import 'package:sizer/sizer.dart';
 
 class Transactions extends StatefulWidget {
   const Transactions({Key? key}) : super(key: key);
@@ -343,14 +341,14 @@ DateTime _startDate =now;
                         color: appbarBackgroundColor,
                       fontFamily: "Outfit",
                       fontWeight: FontWeight.w500,
-                      fontSize: 17,
+                      fontSize: 12.sp,
                     ),
                     focusColor:Colors.white,
                     hint: AutoSizeText("Select Category"),
                     items: items.map((itemsname) {
                       return DropdownMenuItem(
                         value: itemsname,
-                        child: AutoSizeText(itemsname),
+                        child: Text(itemsname,style: TextStyle(fontSize: 12.sp),),
                       );
                     }).toList(),
                     onChanged:(String ?newValue){
@@ -370,7 +368,7 @@ DateTime _startDate =now;
             Text(
               selectedMonth,
               style: TextStyle(fontFamily: "Outfit",fontWeight: FontWeight.w500,
-                  fontSize: 17),):
+                  fontSize: 13.sp),):
                 divider(),
             dropdownValue=="Select Range" ?
                 Padding(
@@ -504,21 +502,21 @@ DateTime _startDate =now;
                                children: <TextSpan>[
                                  TextSpan(
                                    text:"${DateFormat.MMMd().format(incomeExpenseValues!.createdDate)}\n",
-                                 style: TextStyle(fontFamily: "Outfit",fontSize: 15,
+                                 style: TextStyle(fontFamily: "Outfit",fontSize: 11.sp,
                                      fontWeight: FontWeight.w400,
                                      color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): Colors.black87,
                                  )
                              ),
                          TextSpan(
                          text:"  ${incomeExpenseValues.category}\n",
-                         style: TextStyle(fontFamily: "Outfit",fontSize: 20,
+                         style: TextStyle(fontFamily: "Outfit",fontSize: 13.sp,
                              fontWeight: FontWeight.w500,
                              color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): Colors.black87,
                          )
                          ),
                                  TextSpan(
                                      text:"  ${incomeExpenseValues.amount}",
-                                     style: TextStyle(fontFamily: "Outfit",fontSize: 24,
+                                     style: TextStyle(fontFamily: "Outfit",fontSize: 18.5.sp,
                                          fontWeight: FontWeight.w500,
                                          color: incomeExpenseValues.isIncome==true?Color(0xffe6f7ff): Colors.black87,
                                      )

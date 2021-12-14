@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 import '../main.dart';
+import 'package:sizer/sizer.dart';
 class AddIncomeOrExpense extends StatefulWidget {
   @override
   _AddIncomeOrExpenseState createState() => _AddIncomeOrExpenseState();
@@ -80,7 +81,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                   AutoSizeText(
                     "Income",
                     style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 14.sp,
                         fontFamily: "Outfit",
                         fontWeight: FontWeight.w500),
                   ),
@@ -105,7 +106,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                   AutoSizeText(
                     "Expense ",
                     style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 14.sp,
                         fontFamily: "Outfit",
                         fontWeight: FontWeight.w500
                     ),),
@@ -134,7 +135,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
              " $_date",
               style: TextStyle(
                   fontFamily: "Roboto",
-                  fontSize: 17,
+                  fontSize: 12.sp,
                   color: Color(0xff005c99)),
             ),
             trailing: Icon(
@@ -153,7 +154,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                   //divider(width: 50),
                   Padding(
                     padding: const EdgeInsets.only(left: 4),
-                    child: Text(selectedCategory,style: TextStyle(fontSize: 17,fontFamily: "Roboto",
+                    child: Text(selectedCategory,style: TextStyle(fontSize: 12.5.sp,fontFamily: "Roboto",
                         color: Color(0xff005c99)),),
                   ),
                   Icon(Icons.arrow_drop_down,size: 40,color: Color(0xff005c99)),
@@ -191,10 +192,13 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                                     final int key  = keys[index];
                                     final categoryValues= categories.get(key);
                                     return GestureDetector(
-                                        child: Text(categoryValues!.category.toString(),
-                                          style: TextStyle(
-                                              fontSize: 17,fontFamily: "Roboto",fontWeight: FontWeight.w500
-                                          ),),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 10.0,top: 5),
+                                          child: Text(categoryValues!.category.toString(),
+                                            style: TextStyle(
+                                                fontSize: 12.5.sp,fontFamily: "Roboto",fontWeight: FontWeight.w500
+                                            ),),
+                                        ),
                                         onTap: (){
                                           categoryValue =categoryBox.get(key)!.category!;
                                           setState(() {
@@ -210,7 +214,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                                   }, separatorBuilder:
                                     (BuildContext context, int index)
                               {
-                                  return Divider(thickness: 2,color: Colors.blue[200],);
+                                  return Divider(thickness: 2,color: appbarBackgroundColor,);
                                   //SizedBox(height: 5,);
                               },
                               ),
@@ -245,6 +249,9 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                   validator: (value){
                     if(value == null || value.isEmpty){
                       return 'Please Enter Amount';
+                    }
+                    else if(value.length>10){
+                      return 'Pleas enter amount less than 1000000000';
                     }
                     return null;
                   },
@@ -336,7 +343,7 @@ class _AddIncomeOrExpenseState extends State<AddIncomeOrExpense> {
                     }
 
                   }
-                  else if(!isValid){
+                  else if(categoryChoosed==false){
                     return showDialog(context: context,
                         builder: (context){
                           return AlertDialog(

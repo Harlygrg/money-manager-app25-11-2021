@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:money_manager_app/main.dart';
 import 'package:money_manager_app/widgetsUI/custom_widgets.dart';
 import 'package:intl/intl.dart';
-
+import 'package:sizer/sizer.dart';
 
 DateTime currentDateTime = DateTime.now();
 String formated = DateFormat.jm().format(currentDateTime);
@@ -110,7 +110,6 @@ class _CategoriesState extends State<Categories> {
                           child: GestureDetector(
                             child: Container(
                               padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
-                              width: 250,
                               height: 50,
                               decoration: BoxDecoration(
                                 gradient:  LinearGradient(
@@ -120,7 +119,7 @@ class _CategoriesState extends State<Categories> {
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(categoryValues!.category.toString(),
-                              style:const TextStyle(fontSize: 20,fontFamily: "Outfit",
+                              style: TextStyle(fontSize: 15.sp,fontFamily: "Outfit",
                                   fontWeight: FontWeight.w500,color: Colors.white)),
                             ),
                             onTap: (){
